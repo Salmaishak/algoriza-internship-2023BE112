@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Vezeeta.Core.Models
 {
-    internal class Specialization
+    public class Specialization
     {
+        public int specializationID {  get; set; }
+        public string specializationName { get; set;}
     }
 }

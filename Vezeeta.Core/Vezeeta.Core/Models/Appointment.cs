@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,9 @@ namespace Vezeeta.Core.Models
     public enum Appointment_Status { pending, completed, canceled}
     public class Appointment
     {
-
-        public TimeOnly timeID {  get; set; }
-        public DateOnly date { get; set; }
+        [Key]
+        public TimeSpan timeID {  get; set; }
         public DayOfWeek dayOfWeek { get; set;}
-
         public int discountID { get; set; }
 
         public Discount discount { get; set; }
