@@ -13,4 +13,7 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Vezeeta.Infrastructure\Vezeeta.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>

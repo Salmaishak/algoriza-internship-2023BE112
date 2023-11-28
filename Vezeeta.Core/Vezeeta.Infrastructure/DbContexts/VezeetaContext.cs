@@ -10,10 +10,10 @@ namespace Vezeeta.Infrastructure.DbContexts
 {
     public class VezeetaContext : DbContext
     {
-        DbSet<User> Users { get; set; }
-        DbSet<Appointment> Appointments { get; set; }
-        DbSet<Specialization>  Specializations { get; set; }
-        DbSet<Discount> Discounts { get; set; }
+       public DbSet<User> Users { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+       public DbSet<Specialization>  Specializations { get; set; }
+       public DbSet<Discount> Discounts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -24,6 +24,9 @@ namespace Vezeeta.Infrastructure.DbContexts
             modelBuilder.Entity<Appointment>()
                 .HasKey(das => new { das.timeID, das.dayOfWeek });
             base.OnModelCreating(modelBuilder);
+
+           
+
         }
     }
 }
