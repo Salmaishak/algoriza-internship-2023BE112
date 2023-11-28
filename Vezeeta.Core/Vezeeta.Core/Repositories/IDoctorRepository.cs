@@ -12,7 +12,7 @@ namespace Vezeeta.Core.Repositories
     public interface IDoctorRepository
     {
         public bool login (string email, string password);
-        public List<DoctorDTO> GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1);
+        public dynamic GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1);
 
         public bool ConfirmCheckUp(int bookingID);
 
