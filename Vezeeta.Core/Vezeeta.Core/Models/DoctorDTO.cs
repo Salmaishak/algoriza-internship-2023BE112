@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vezeeta.Core.Models
 {
-    public class BookingDTO
+    public class DoctorDTO
     {
         public string PatientName { get; set; }
         public string Image { get; set; }

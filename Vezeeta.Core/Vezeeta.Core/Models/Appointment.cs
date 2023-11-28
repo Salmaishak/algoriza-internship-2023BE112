@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 namespace Vezeeta.Core.Models
 {
     public enum DayOfWeek { Saturday, Sunday, Monday, Tuesday, Wednesday,Thursday, Friday}
-    public enum Appointment_Status { pending, completed, canceled}
+    public enum Appointment_Status { pending, completed, canceled, notBooked}
     public class Appointment
     {
         [Key]
         public TimeSpan timeID {  get; set; }
+        //check if it is notBooked then he can delete or canceled, otherwise can't delete it 
+        
         [Key]
         public DayOfWeek dayOfWeek { get; set;}
         public int discountID { get; set; }
