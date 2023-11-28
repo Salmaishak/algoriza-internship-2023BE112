@@ -12,8 +12,8 @@ using Vezeeta.Infrastructure.DbContexts;
 namespace Vezeeta.Infrastructure.Migrations
 {
     [DbContext(typeof(VezeetaContext))]
-    [Migration("20231128213531_updateDate")]
-    partial class updateDate
+    [Migration("20231128214220_updateKeyOfAppointment")]
+    partial class updateKeyOfAppointment
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,7 +47,7 @@ namespace Vezeeta.Infrastructure.Migrations
                     b.Property<int>("status")
                         .HasColumnType("int");
 
-                    b.HasKey("timeID");
+                    b.HasKey("timeID", "dayOfWeek");
 
                     b.HasIndex("discountID");
 
