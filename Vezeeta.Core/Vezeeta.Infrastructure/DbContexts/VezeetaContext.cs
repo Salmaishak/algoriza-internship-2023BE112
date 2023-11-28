@@ -19,5 +19,11 @@ namespace Vezeeta.Infrastructure.DbContexts
         {
             optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=VezeetaDB;Trusted_Connection=True;");
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Appointment>()
+                .HasKey(das => new { das.timeID, das.dayOfWeek });
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

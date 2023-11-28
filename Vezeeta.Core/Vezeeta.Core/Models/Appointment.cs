@@ -13,6 +13,7 @@ namespace Vezeeta.Core.Models
     {
         [Key]
         public TimeSpan timeID {  get; set; }
+        [Key]
         public DayOfWeek dayOfWeek { get; set;}
         public int discountID { get; set; }
 
