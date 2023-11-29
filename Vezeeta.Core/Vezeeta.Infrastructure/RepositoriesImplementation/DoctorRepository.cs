@@ -13,7 +13,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
     {
         private readonly VezeetaContext _context;
 
-        public DoctorRepository (VezeetaContext context) => _context = context;
+        public DoctorRepository(VezeetaContext context) { _context = context; }
         public bool Add(float price, List<Core.Models.DayOfWeek> days, List<TimeSpan> time)
         {
             throw new NotImplementedException();
@@ -41,11 +41,14 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         public bool login(string email, string password)
         {
-            var doctor = _context.Find<User> (email);
+            var doctor = _context.Users.FirstOrDefault<User>(e =>e.email.Equals(email));
 
             if (doctor != null && doctor.type == UserType.doctor)
             {
+                if (doctor.password == password)
                 return true; 
+                else 
+                    return false; 
             }
             return false;
         }

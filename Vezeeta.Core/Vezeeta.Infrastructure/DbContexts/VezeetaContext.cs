@@ -10,7 +10,7 @@ namespace Vezeeta.Infrastructure.DbContexts
 {
     public class VezeetaContext : DbContext
     {
-       public DbSet<User> Users { get; set; }
+       public DbSet<User> Users { get { return Set<User>(); }  }
         public DbSet<Appointment> Appointments { get; set; }
        public DbSet<Specialization>  Specializations { get; set; }
        public DbSet<Discount> Discounts { get; set; }
