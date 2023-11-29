@@ -32,6 +32,10 @@ namespace Vezeeta.Core.Models
 
         public Gender gender { get; set; }
 
+        public DateTime dateOfBirth { get; set; }
+
+        List<Booking> bookings { get; set; }
+
 
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Vezeeta.Core.Models;
@@ -11,15 +12,15 @@ namespace Vezeeta.Core.Repositories
 {
     public interface IDoctorRepository
     {
-        public bool login (string email, string password);
+        public HttpStatusCode login (string email, string password);
         public dynamic GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1);
 
-        public bool ConfirmCheckUp(int bookingID);
+        public HttpStatusCode ConfirmCheckUp(int bookingID);
 
-        public bool Add(float price, List<DayOfWeek> days, List<TimeSpan> time);
+        public HttpStatusCode Add(int doctorId, float price, List<(DayOfWeek Day, List<TimeSpan> Times)> days);
 
-        public bool Edit(TimeSpan time, DayOfWeek day);
+        public HttpStatusCode Edit(TimeSpan time, DayOfWeek day);
 
-        public bool Delete(TimeSpan time, DayOfWeek day);
+        public HttpStatusCode Delete(TimeSpan time, DayOfWeek day);
     }
 }

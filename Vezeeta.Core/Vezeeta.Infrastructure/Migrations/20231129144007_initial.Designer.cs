@@ -12,8 +12,8 @@ using Vezeeta.Infrastructure.DbContexts;
 namespace Vezeeta.Infrastructure.Migrations
 {
     [DbContext(typeof(VezeetaContext))]
-    [Migration("20231128214220_updateKeyOfAppointment")]
-    partial class updateKeyOfAppointment
+    [Migration("20231129144007_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,36 +26,55 @@ namespace Vezeeta.Infrastructure.Migrations
 
             modelBuilder.Entity("Vezeeta.Core.Models.Appointment", b =>
                 {
-                    b.Property<TimeSpan>("timeID")
-                        .HasColumnType("time");
-
-                    b.Property<int>("dayOfWeek")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("discountID")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("day")
                         .HasColumnType("int");
 
                     b.Property<int>("doctorID")
                         .HasColumnType("int");
 
-                    b.Property<int>("patientID")
-                        .HasColumnType("int");
-
-                    b.Property<float>("price")
-                        .HasColumnType("real");
-
-                    b.Property<int>("status")
-                        .HasColumnType("int");
-
-                    b.HasKey("timeID", "dayOfWeek");
-
-                    b.HasIndex("discountID");
+                    b.HasKey("Id");
 
                     b.HasIndex("doctorID");
 
+                    b.ToTable("Appointment");
+                });
+
+            modelBuilder.Entity("Vezeeta.Core.Models.Booking", b =>
+                {
+                    b.Property<int>("BookingID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingID"), 1L, 1);
+
+                    b.Property<int>("BookingStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DoctorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("patientID")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("time")
+                        .HasColumnType("time");
+
+                    b.HasKey("BookingID");
+
+                    b.HasIndex("DoctorID");
+
                     b.HasIndex("patientID");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Booking");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Discount", b =>
@@ -65,6 +84,9 @@ namespace Vezeeta.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("discountID"), 1L, 1);
+
+                    b.Property<int>("discountActivity")
+                        .HasColumnType("int");
 
                     b.Property<string>("discountName")
                         .IsRequired()
@@ -81,7 +103,7 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     b.HasKey("discountID");
 
-                    b.ToTable("Discounts");
+                    b.ToTable("Discount");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Specialization", b =>
@@ -98,7 +120,28 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     b.HasKey("specializationID");
 
-                    b.ToTable("Specializations");
+                    b.ToTable("Specialization");
+                });
+
+            modelBuilder.Entity("Vezeeta.Core.Models.TimeSlot", b =>
+                {
+                    b.Property<int>("SlotId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SlotId"), 1L, 1);
+
+                    b.Property<int>("AppointmentID")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("time");
+
+                    b.HasKey("SlotId");
+
+                    b.HasIndex("AppointmentID");
+
+                    b.ToTable("TimeSlot");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.User", b =>
@@ -109,9 +152,8 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("userId"), 1L, 1);
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("dateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("email")
                         .IsRequired()
@@ -125,7 +167,6 @@ namespace Vezeeta.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("lname")
@@ -145,60 +186,66 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     b.HasKey("userId");
 
-                    b.ToTable("Users");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Doctor", b =>
                 {
                     b.HasBaseType("Vezeeta.Core.Models.User");
 
+                    b.Property<int>("doctorid")
+                        .HasColumnType("int");
+
+                    b.Property<float>("price")
+                        .HasColumnType("real");
+
                     b.Property<int>("specializationID")
                         .HasColumnType("int");
 
                     b.HasIndex("specializationID");
 
-                    b.HasDiscriminator().HasValue("Doctor");
-                });
-
-            modelBuilder.Entity("Vezeeta.Core.Models.Patient", b =>
-                {
-                    b.HasBaseType("Vezeeta.Core.Models.User");
-
-                    b.Property<int?>("PatientuserId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("PatientuserId");
-
-                    b.HasDiscriminator().HasValue("Patient");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Appointment", b =>
                 {
-                    b.HasOne("Vezeeta.Core.Models.Discount", "discount")
-                        .WithMany()
-                        .HasForeignKey("discountID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Vezeeta.Core.Models.Doctor", "doctor")
                         .WithMany("Doctors_Appointments")
                         .HasForeignKey("doctorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Vezeeta.Core.Models.Patient", "patient")
+                    b.Navigation("doctor");
+                });
+
+            modelBuilder.Entity("Vezeeta.Core.Models.Booking", b =>
+                {
+                    b.HasOne("Vezeeta.Core.Models.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Vezeeta.Core.Models.User", "Patient")
                         .WithMany()
                         .HasForeignKey("patientID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("discount");
+                    b.Navigation("Doctor");
 
-                    b.Navigation("doctor");
+                    b.Navigation("Patient");
+                });
 
-                    b.Navigation("patient");
+            modelBuilder.Entity("Vezeeta.Core.Models.TimeSlot", b =>
+                {
+                    b.HasOne("Vezeeta.Core.Models.Appointment", "Appointment")
+                        .WithMany()
+                        .HasForeignKey("AppointmentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Doctor", b =>
@@ -209,24 +256,18 @@ namespace Vezeeta.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Specialization");
-                });
+                    b.HasOne("Vezeeta.Core.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("Vezeeta.Core.Models.Doctor", "userId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("Vezeeta.Core.Models.Patient", b =>
-                {
-                    b.HasOne("Vezeeta.Core.Models.Patient", null)
-                        .WithMany("Patients")
-                        .HasForeignKey("PatientuserId");
+                    b.Navigation("Specialization");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Doctor", b =>
                 {
                     b.Navigation("Doctors_Appointments");
-                });
-
-            modelBuilder.Entity("Vezeeta.Core.Models.Patient", b =>
-                {
-                    b.Navigation("Patients");
                 });
 #pragma warning restore 612, 618
         }
