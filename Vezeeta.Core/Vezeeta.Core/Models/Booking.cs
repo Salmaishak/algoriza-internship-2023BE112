@@ -20,8 +20,8 @@ namespace Vezeeta.Core.Models
 
     
 
-public int appointmentID { get; set; }
-        public Appointment appointment {  get; set; }
+        public int timeSlotID { get; set; }
+        public TimeSlot timeslot {  get; set; }
         public Status BookingStatus { get; set; }
 
 
