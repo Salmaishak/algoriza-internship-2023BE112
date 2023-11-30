@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Vezeeta.Core.Models;
@@ -17,12 +18,12 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             _context =context ;
         }
 
-        public bool Booking(TimeSpan time, Core.Models.DayOfWeek day, Discount discount = null)
+        public HttpStatusCode Booking(TimeSpan time, Core.Models.DayOfWeek day, Discount discount = null)
         {
             throw new NotImplementedException();
         }
 
-        public bool CancelBooking(TimeSpan time, Core.Models.DayOfWeek day)
+        public HttpStatusCode CancelBooking(TimeSpan time, Core.Models.DayOfWeek day)
         {
             throw new NotImplementedException();
         }
@@ -37,14 +38,21 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             throw new NotImplementedException();
         }
 
-        public bool PatientLogin(string email, string password)
+        public HttpStatusCode PatientLogin(string email, string password)
         {
             throw new NotImplementedException();
         }
 
-        public bool Register(User user)
+        public HttpStatusCode Register(User user)
         {
-            throw new NotImplementedException();
+            if (user != null)
+            {
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+            else
+               return HttpStatusCode.NotFound;
         }
     }
 }

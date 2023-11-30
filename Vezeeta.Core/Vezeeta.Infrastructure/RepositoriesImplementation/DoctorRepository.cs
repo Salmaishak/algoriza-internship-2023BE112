@@ -18,16 +18,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
         private readonly VezeetaContext _context;
 
         public DoctorRepository(VezeetaContext context) { _context = context; }
-        /// <summary>
-        /// Add Appointments
-        /// </summary>
-        /// <param name="price"></param>
-        /// <param name="days"></param>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        
-
+     
 
         public HttpStatusCode ConfirmCheckUp(int bookingID)
         {

@@ -18,7 +18,7 @@ namespace Vezeeta.Core.Models
         public Doctor Doctor
         { get; set; }
 
-        public DayOfWeek Day { get; set; }
+    
 
 public int appointmentID { get; set; }
         public Appointment appointment {  get; set; }
