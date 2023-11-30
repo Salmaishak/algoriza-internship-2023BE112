@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Vezeeta.Core.Models;
 using Vezeeta.Infrastructure.DbContexts;
+using Vezeeta.Presentation.API.Models;
 using Vezeeta.Services.Interfaces;
 using Vezeeta.Services.Services;
 using DayOfWeek = Vezeeta.Core.Models.DayOfWeek;
@@ -33,32 +34,34 @@ namespace Vezeeta.Presentation.API.Controllers
 
         [Route("/api/doctors/[action]")]
         [HttpPost]
-        public HttpStatusCode Add( IDictionary<DayOfWeek, List<TimeSpan>> times)
+      
+        public HttpStatusCode Add(AddAppointmentDTO appointmentInfo)
         {
-            int doctorId = 1;
-            float price = 44;
-            var doctor = _context.Doctors.FirstOrDefault<Doctor>(d => d.doctorid == doctorId);
+            // get the doctor who is adding the information 
+            var doctor = _context.Doctors.FirstOrDefault<Doctor>(d => d.doctorid == appointmentInfo.doctorId);
+            // get last appointment ID to add on it
             int lastAppointmentID = _context.Appointments.OrderByDescending(a => a.Id).FirstOrDefault()?.Id ?? 0;
-
-            List<Appointment> appointments = new List<Appointment>();
-            
-            if (doctor != null && times != null)
+            // if the doctor is null (Unauthorized) 
+            if (doctor != null )
             {
-                doctor.price = price;
-
-                foreach (var entry in times)
+                //change the price
+                doctor.price = appointmentInfo.price;
+              
+                foreach (var entry in appointmentInfo.times)
                 {
-                    DayOfWeek day = entry.Key;
+                    DayOfWeek dayWeek = entry.Key;
                     List<TimeSpan> timeSlots = entry.Value;
-                    _context.Appointments.Add(new Appointment() { day= day, doctorID= doctor.doctorid});
+                    _context.Appointments.Add(new Appointment() { day= dayWeek, doctorID= doctor.doctorid});
                     lastAppointmentID++;
-                    _logger.LogInformation($"Day: {day}");
+                    _logger.LogInformation($"Day: {dayWeek}");
                     _logger.LogInformation($"TimeSlots: {timeSlots.Count}");
+                    _context.SaveChanges();
+                   
                     foreach (var item in timeSlots)
                     {
                         _logger.LogInformation($"TimeSlot: {item}");
                         _context.TimeSlots.Add(new TimeSlot() { AppointmentID = lastAppointmentID, Time = item });
-
+                        _context.SaveChanges();
                     }
                 }
               
