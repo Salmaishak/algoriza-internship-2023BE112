@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Vezeeta.Core.Models;
+using Vezeeta.Presentation.API.Models;
 using DayOfWeek = Vezeeta.Core.Models.DayOfWeek;
 
 namespace Vezeeta.Core.Repositories
@@ -17,7 +18,7 @@ namespace Vezeeta.Core.Repositories
 
         public HttpStatusCode ConfirmCheckUp(int bookingID);
 
-        public HttpStatusCode Add(int doctorId, float price, List<(DayOfWeek Day, List<TimeSpan> Times)> days);
+        public HttpStatusCode Add(AddAppointmentDTO appointmentInfo);
 
         public HttpStatusCode Edit(TimeSpan time, DayOfWeek day);
 

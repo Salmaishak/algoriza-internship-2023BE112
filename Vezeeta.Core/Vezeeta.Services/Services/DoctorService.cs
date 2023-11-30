@@ -8,6 +8,7 @@ using Vezeeta.Core.Models;
 using Vezeeta.Core.Repositories;
 using Vezeeta.Infrastructure.DbContexts;
 using Vezeeta.Infrastructure.RepositoriesImplementation;
+using Vezeeta.Presentation.API.Models;
 using Vezeeta.Services.Interfaces;
 using DayOfWeek = Vezeeta.Core.Models.DayOfWeek;
 
@@ -32,9 +33,9 @@ namespace Vezeeta.Services.Services
            
         }
 
-        public HttpStatusCode Add(int doctorId, float price, List<(DayOfWeek Day, List<TimeSpan> Times)> days)
+        public HttpStatusCode Add(AddAppointmentDTO appointmentInfo)
         {
-            return repository.Add (doctorId, price, days);
+            return repository.Add (appointmentInfo);
         }
     }
 }

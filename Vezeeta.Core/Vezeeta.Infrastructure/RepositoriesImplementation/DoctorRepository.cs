@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Vezeeta.Core.Models;
 using Vezeeta.Core.Repositories;
 using Vezeeta.Infrastructure.DbContexts;
+using Vezeeta.Presentation.API.Models;
 using DayOfWeek = Vezeeta.Core.Models.DayOfWeek;
 
 namespace Vezeeta.Infrastructure.RepositoriesImplementation
@@ -25,31 +26,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
         /// <param name="time"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public HttpStatusCode Add(int doctorId, float price, List<(DayOfWeek Day, List<TimeSpan> Times)> days)
-  {
-      try
-      {
-          var doctor = _context.Doctors.FirstOrDefault<Doctor>(d => d.doctorid == doctorId);
-
-          if (doctor != null)
-          {
-              doctor.price = price;
-
-             
-
-              _context.SaveChanges();
-              return HttpStatusCode.OK; // Success
-          }
-
-          return HttpStatusCode.Unauthorized;
-      }
-      catch (Exception ex)
-      {
-          // Log or handle the exception
-          Console.WriteLine(ex.Message);
-          return HttpStatusCode.InternalServerError; // Or handle specific errors accordingly
-      }
-  }
+        
 
 
         public HttpStatusCode ConfirmCheckUp(int bookingID)
@@ -95,7 +72,43 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
             return age;
         }
+        public HttpStatusCode Add(AddAppointmentDTO appointmentInfo)
+        {
+            // get the doctor who is adding the information 
+            var doctor = _context.Doctors.FirstOrDefault<Doctor>(d => d.doctorid == appointmentInfo.doctorId);
+            // get last appointment ID to add on it
+            int lastAppointmentID = _context.Appointments.OrderByDescending(a => a.Id).FirstOrDefault()?.Id ?? 0;
+            // if the doctor is null (Unauthorized) 
+            if (doctor != null)
+            {
+                //change the price
+                doctor.price = appointmentInfo.price;
 
+                foreach (var entry in appointmentInfo.times)
+                {
+                    DayOfWeek dayWeek = entry.Key;
+                    List<TimeSpan> timeSlots = entry.Value;
+                    _context.Appointments.Add(new Appointment() { day = dayWeek, doctorID = doctor.doctorid });
+                    lastAppointmentID++;
+                   
+                    _context.SaveChanges();
+
+                    foreach (var item in timeSlots)
+                    {
+                        
+                        _context.TimeSlots.Add(new TimeSlot() { AppointmentID = lastAppointmentID, Time = item });
+                        _context.SaveChanges();
+                    }
+                }
+
+
+                _context.SaveChanges();
+                return HttpStatusCode.Accepted;
+
+            }
+
+            return HttpStatusCode.Unauthorized; // Doctor not found 401
+        }
 
         public HttpStatusCode login(string email, string password)
         {
