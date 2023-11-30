@@ -20,8 +20,8 @@ namespace Vezeeta.Core.Models
 
         public DayOfWeek Day { get; set; }
 
-        public TimeSpan time { get; set; }
-
+public int appointmentID { get; set; }
+        public Appointment appointment {  get; set; }
         public Status BookingStatus { get; set; }
 
 
