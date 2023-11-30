@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vezeeta.Infrastructure.DbContexts;
 
@@ -11,9 +12,10 @@ using Vezeeta.Infrastructure.DbContexts;
 namespace Vezeeta.Infrastructure.Migrations
 {
     [DbContext(typeof(VezeetaContext))]
-    partial class VezeetaContextModelSnapshot : ModelSnapshot
+    [Migration("20231130233705_changeBookingDiscount")]
+    partial class changeBookingDiscount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +42,7 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     b.HasIndex("doctorID");
 
-                    b.ToTable("Appointment", (string)null);
+                    b.ToTable("Appointment");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Booking", b =>
@@ -79,7 +81,7 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     b.HasIndex("timeSlotID");
 
-                    b.ToTable("Booking", (string)null);
+                    b.ToTable("Booking");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Discount", b =>
@@ -108,7 +110,7 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     b.HasKey("discountID");
 
-                    b.ToTable("Discount", (string)null);
+                    b.ToTable("Discount");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.Specialization", b =>
@@ -125,7 +127,7 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     b.HasKey("specializationID");
 
-                    b.ToTable("Specialization", (string)null);
+                    b.ToTable("Specialization");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.TimeSlot", b =>
@@ -146,7 +148,7 @@ namespace Vezeeta.Infrastructure.Migrations
 
                     b.HasIndex("AppointmentID");
 
-                    b.ToTable("TimeSlot", (string)null);
+                    b.ToTable("TimeSlot");
                 });
 
             modelBuilder.Entity("Vezeeta.Core.Models.User", b =>

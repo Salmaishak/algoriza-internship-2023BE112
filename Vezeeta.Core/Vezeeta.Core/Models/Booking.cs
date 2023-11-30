@@ -18,7 +18,11 @@ namespace Vezeeta.Core.Models
         public Doctor Doctor
         { get; set; }
 
-    
+        public int discountId { get; set; }
+        public Discount discount { get; set; }
+
+        // final price after discount is to be calculated here 
+        public float finalPrice { get; set; }
 
         public int timeSlotID { get; set; }
         public TimeSlot timeslot {  get; set; }
