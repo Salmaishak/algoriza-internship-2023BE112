@@ -12,7 +12,7 @@ namespace Vezeeta.Presentation.API.Controllers
 
         private readonly IPatientService service;
         private readonly VezeetaContext context;
-        public PatientController (IPatientService service, VezeetaContext context)
+        public PatientController(IPatientService service, VezeetaContext context)
         {
             this.service = service;
             this.context = context;
@@ -36,7 +36,7 @@ namespace Vezeeta.Presentation.API.Controllers
 
             if (email != String.Empty && password != String.Empty)
             {
-                var patient = context.Users.Where<User>(d=> d.email == email && d.password==password).FirstOrDefault();
+                var patient = context.Users.Where<User>(d => d.email == email && d.password == password).FirstOrDefault();
                 if (patient != null)
                 {
                     return HttpStatusCode.OK;
@@ -44,10 +44,10 @@ namespace Vezeeta.Presentation.API.Controllers
                 else return HttpStatusCode.Unauthorized;
             }
             else
-             return   HttpStatusCode.Unauthorized;
+                return HttpStatusCode.Unauthorized;
         }
-        [Route("api/patient/booking/[action]")]
-        [HttpGet]
+        [Route("api/patient/searchdcotors/booking/[action]")]
+        [HttpPost]
         public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0) {
 
             if (SlotID != 0)
@@ -72,8 +72,8 @@ namespace Vezeeta.Presentation.API.Controllers
                     DoctorID = targetedTimeSlot.Select(d => d.appoint.doctorID).FirstOrDefault(),
                     timeSlotID = targetedTimeSlot.Select(t => t.time.SlotId).FirstOrDefault(),
                     patientID = patientID,
-                    BookingStatus= Status.pending
-                   
+                    BookingStatus = Status.pending
+
                 };
                 context.Bookings.Add(booking);
                 context.SaveChanges();
@@ -85,12 +85,12 @@ namespace Vezeeta.Presentation.API.Controllers
             else
                 return HttpStatusCode.BadRequest;
 
-            
+
         }
 
         [Route("api/patient/booking/[action]")]
-        [HttpGet]
-        public HttpStatusCode CancelBooking (int patientID, int BookingID)
+        [HttpPatch]
+        public HttpStatusCode CancelBooking(int patientID, int BookingID)
         {
             if (BookingID != 0)
             {
@@ -101,11 +101,11 @@ namespace Vezeeta.Presentation.API.Controllers
                     context.SaveChanges();
                 }
                 else
-                    return HttpStatusCode.Unauthorized; 
+                    return HttpStatusCode.Unauthorized;
                 return HttpStatusCode.OK;
 
             }
-            else 
+            else
                 return HttpStatusCode.BadRequest;
         }
 
@@ -138,10 +138,71 @@ namespace Vezeeta.Presentation.API.Controllers
                                    Status = booking.BookingStatus
                                };
 
-                               
-
-
             return userBookings;
+        }
+
+        [Route("api/patient/searchDoctors/Getall")]
+        [HttpGet]
+
+        public dynamic GetAllDoctors(int page=1, int pageSize=10, string search="") {
+
+            var doctors = context.Doctors
+     .Select(doctor => new
+     {
+         doctor.doctorid,
+         doctor.price,
+      
+         specialization = context.Specializations
+             .Where(s => s.specializationID == doctor.specializationID)
+             .Select(s => s.specializationName)
+             .FirstOrDefault(),
+         doctorAppointments = context.Appointments
+             .Where(a => a.doctorID == doctor.doctorid)
+             .Join(
+                 context.TimeSlots,
+                 appointment => appointment.Id,
+                 timeSlot => timeSlot.AppointmentID,
+                 (appointment, timeSlot) => new
+                 {
+                    day= appointment.day.ToString(),
+                     timeSlot.Time
+                 })
+             .ToList(),
+        
+         doctor.fname,
+         doctor.lname,
+         doctor.email,
+         doctor.image,
+         doctor.phoneNumber,
+        
+        gender= doctor.gender.ToString()     })
+     .ToList();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var searchedDocs = from d in doctors
+                                   where d.fname.Contains(search) ||
+                                   d.email.Contains(search) ||
+                                   d.specialization.Contains(search) ||
+                                   d.gender.Contains(search) ||
+                                   d.phoneNumber.Contains(search)||
+                                   d.doctorAppointments.Select(a=>a.day).Contains(search)
+                                 select d ;
+
+                var paginationDoc= searchedDocs.Skip ((page-1)*pageSize).Take(pageSize);
+                if (searchedDocs!=null)
+                {
+                    return paginationDoc;
+                }
+                else
+                   return doctors.Skip((page - 1) * pageSize).Take(pageSize);
+
+
+            }
+            else
+                return doctors.Skip((page-1)*pageSize).Take(pageSize);
+
+           
         }
         public IActionResult Index()
         {
