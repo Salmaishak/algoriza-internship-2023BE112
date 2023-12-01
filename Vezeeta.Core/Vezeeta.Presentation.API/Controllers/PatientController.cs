@@ -46,15 +46,15 @@ namespace Vezeeta.Presentation.API.Controllers
             else
                 return HttpStatusCode.Unauthorized;
         }
-        [Route("api/patient/searchdcotors/booking/[action]")]
+        [Route("api/patient/searchDoctors/booking/[action]")]
         [HttpPost]
         public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0) {
 
             if (SlotID != 0)
             {
-                // info of Booking : doctorID, timeID, patientID 
-                //timeslot : slotid, appointmentID, timeSlot 
-                //appointment: day, appointmentID, doctorID 
+                // Info of Booking : doctorID, timeID, patientID 
+                // Timeslot : slotid, appointmentID, timeSlot 
+                // Appointment: day, appointmentID, doctorID 
                 var query = from appointment in context.Appointments
                             join timeslot in context.TimeSlots
                             on appointment.Id equals timeslot.AppointmentID
@@ -152,31 +152,29 @@ namespace Vezeeta.Presentation.API.Controllers
          doctor.doctorid,
          doctor.price,
       
-         specialization = context.Specializations
-             .Where(s => s.specializationID == doctor.specializationID)
-             .Select(s => s.specializationName)
-             .FirstOrDefault(),
-         doctorAppointments = context.Appointments
-             .Where(a => a.doctorID == doctor.doctorid)
-             .Join(
-                 context.TimeSlots,
-                 appointment => appointment.Id,
-                 timeSlot => timeSlot.AppointmentID,
-                 (appointment, timeSlot) => new
-                 {
-                    day= appointment.day.ToString(),
-                     timeSlot.Time
-                 })
-             .ToList(),
-        
-         doctor.fname,
-         doctor.lname,
-         doctor.email,
-         doctor.image,
-         doctor.phoneNumber,
-        
-        gender= doctor.gender.ToString()     })
-     .ToList();
+                 specialization = context.Specializations
+                     .Where(s => s.specializationID == doctor.specializationID)
+                     .Select(s => s.specializationName)
+                     .FirstOrDefault(),
+                 doctorAppointments = context.Appointments
+                     .Where(a => a.doctorID == doctor.doctorid)
+                     .Join(
+                         context.TimeSlots,
+                         appointment => appointment.Id,
+                         timeSlot => timeSlot.AppointmentID,
+                         (appointment, timeSlot) => new
+                         {
+                            day= appointment.day.ToString(),
+                             timeSlot.Time
+                         })
+                     .ToList(),
+                 doctor.fname,
+                 doctor.lname,
+                 doctor.email,
+                 doctor.image,
+                 doctor.phoneNumber,
+                gender= doctor.gender.ToString()     })
+             .ToList();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
