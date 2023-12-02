@@ -33,9 +33,35 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             else return HttpStatusCode.NotFound;
         }
 
-        public HttpStatusCode Delete(TimeSpan time, Core.Models.DayOfWeek day)
+        public HttpStatusCode Delete(int timeslotID) // not done
         {
-            throw new NotImplementedException();
+            var bookingCheck = _context.Bookings.Where(d => d.timeslot.SlotId == timeslotID &&
+            d.BookingStatus == Status.pending);
+            //if it exists here it is booked
+
+            if (bookingCheck.Any())
+            {
+                return HttpStatusCode.Unauthorized;
+            }
+            else
+            {   //else it doesn't exist in booking, so we it must be in appointments
+               
+                var timeslot = _context.TimeSlots.Where(a => a.SlotId == timeslotID).FirstOrDefault();
+                if ( timeslot == null)
+                {
+                    // this day doesnt have appointments so i will display error not found, he can use Add to add in this day
+                    return HttpStatusCode.NotFound;
+                }
+                else
+                {
+                    //delete timeslot
+                    _context.Remove(timeslot);
+                    _context.SaveChanges();
+                    return HttpStatusCode.OK;
+                }
+
+
+            }
         }
 
         public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID)

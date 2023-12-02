@@ -22,6 +22,6 @@ namespace Vezeeta.Core.Repositories
 
         public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID);
 
-        public HttpStatusCode Delete(TimeSpan time, DayOfWeek day);
+        public HttpStatusCode Delete(int timeslotID);
     }
 }

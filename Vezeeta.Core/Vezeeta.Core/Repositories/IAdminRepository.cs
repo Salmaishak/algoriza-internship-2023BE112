@@ -10,7 +10,7 @@ namespace Vezeeta.Core.Repositories
     {
         public int NumOfDoctors();
         public int NumOfPatients();
-
+        public dynamic NumOfRequests();
         public dynamic Top5Specializations();
         public dynamic Top10Doctors();
 

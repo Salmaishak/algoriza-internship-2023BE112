@@ -26,15 +26,15 @@ namespace Vezeeta.Services.Services
         {
             return repository.NumOfPatients();
         }
-
+        public dynamic NumOfRequests()
+        { return repository.NumOfRequests(); }
         public dynamic Top10Doctors()
-        {
-            throw new NotImplementedException();
+        {return repository.Top10Doctors();
         }
 
         public dynamic Top5Specializations()
         {
-            throw new NotImplementedException();
+            return repository.Top5Specializations();
         }
     }
 }

@@ -53,9 +53,9 @@ namespace Vezeeta.Services.Services
          return repository.UpdateAppointment (timeslotID, time, day, doctorID); 
         }
 
-        public HttpStatusCode Delete(TimeSpan time, DayOfWeek day)
+        public HttpStatusCode Delete(int timeslotID)
         {
-            throw new NotImplementedException();
+           return repository.Delete(timeslotID);
         }
     }
 }

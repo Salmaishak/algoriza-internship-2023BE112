@@ -53,38 +53,19 @@ namespace Vezeeta.Presentation.API.Controllers
         {
             return doctorService.GetAll(doctorId, searchDate, pageSize, pageNumber);
         }
-        [Route("/api/doctors/setting/[action]")]
+        [Route("/api/doctors/setting/Update")]
         [HttpPatch]
         public HttpStatusCode UpdateAppointment (int timeslotID,TimeSpan time, DayOfWeek day, int doctorID)
         {
-            var bookingCheck = _context.Bookings.Where(d => d.timeslot.SlotId == timeslotID &&
-          d.BookingStatus==Status.pending);
-            //if it exists here it is booked
+            return doctorService.UpdateAppointment(timeslotID, time, day, doctorID);
 
-            if (bookingCheck.Any())
-            {
-                return HttpStatusCode.Unauthorized;
-            }
-            else
-            {   //else it doesn't exist in booking, so we it must be in appointments
-                var appointment = _context.Appointments.Where(a=>a.day== day ).FirstOrDefault();
-                var timeslot = _context.TimeSlots.Where(a=>a.SlotId== timeslotID).FirstOrDefault();
-                if (appointment== null || timeslot==null)
-                {
-                    // this day doesnt have appointments so i will display error not found, he can use Add to add in this day
-                    return HttpStatusCode.NotFound;
-                }
-                else
-                {
-                    //change time of this timeslot
-                    timeslot.Time = time;
-                    _context.SaveChanges();
-                    return HttpStatusCode.OK;
-                }
-             
+        }
 
-            }
-
+        [Route("/api/doctors/setting/[action]")]
+        [HttpDelete]
+        public HttpStatusCode Delete (int timeslotID)
+        {
+            return doctorService.Delete(timeslotID);
         }
 
         public IActionResult Index()
