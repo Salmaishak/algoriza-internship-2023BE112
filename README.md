@@ -1,10 +1,12 @@
 # Algoriza Internship Back-End Developer Track : Vezeeta Website (Endpoints)
 ## Student Information:
-### Student Code: BE112/ 2023BE112
-### Student Name: Salma Magdy Ishak
-
-This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Entity Framework and Onion Architecture.
-
+ Student Code: BE112/ 2023BE112
+ <br>
+ Student Name: Salma Magdy Ishak
+ # 
+ ## Project Overview:
+#### This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Entity Framework and Onion Architecture.
+#
 ### Project Entities Consists of: 
 - Admin
 - Doctors
@@ -15,30 +17,70 @@ This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.
 - Core Layer
   --
   - Models
+    - Appointment
+    - Booking
+    - Doctor
+    - User
+    - Discount
+    - Specalization
+    - Timeslot
   - DTOs
+    - AddAppointmentDTO
   - Repositories
+    - IAdminRepository
+    - IPatientRepository
+    - IDoctorRepository
+  
 - Infrastructure Layer
   --
   - Dbcontexts
+    - VezeetaContext
   - Repositories Implementations
+    - AdminRepository
+    - PatientRepository
+    - DoctorRepository
   - Migrations
 - Services Layer
   --
   - Interfaces
+    - IAdminServices
+    - IPatientServices
+    - IDoctorServices
   - Services
+    - AdminServices
+    - DoctorServices
+    - PatientServices
 - Presentation Layer
   --
   - API Endpoints Controller
-
+    - AdminController
+    - DoctorController
+    - PatientController
+#
 ## SQL Server Database Diagram: 
 ![algo](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/f38796cd-343f-47c3-a1c9-99538284e009)
 
 ## Inner Code Enums: 
-- Discount type
 - User Type
+  - Admin
+  - Doctor
+  - Patient
 - Booking Status
+  - Pending
+  - Completed
+  - Canceled
 - Gender
+  - Female
+  - Male
 - Day Of Week
-- Discount Activity 
+  - Saturday
+  - Sunday
+  - Etc...
+- Discount Activity
+  - Active
+  - Deactive
+- Discount Type
+  - Percentage
+  - Value
 
  
