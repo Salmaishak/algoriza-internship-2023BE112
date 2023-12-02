@@ -105,7 +105,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
         {
             var doctor = _context.Users.FirstOrDefault<User>(e =>e.email.Equals(email));
 
-            if (doctor != null && doctor.type == UserType.doctor)
+            if (doctor != null && doctor.type== UserType.doctor)
             {
                 if (doctor.password == password)
                 return HttpStatusCode.OK; 

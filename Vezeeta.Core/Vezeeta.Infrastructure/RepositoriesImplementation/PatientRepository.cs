@@ -189,6 +189,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
         {
             if (user != null)
             {
+               user.type=  UserType.patient;
                context.Users.Add(user);
                context.SaveChanges();
                 return HttpStatusCode.OK;

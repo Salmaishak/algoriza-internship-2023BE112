@@ -1,3 +1,4 @@
+using Vezeeta.Core.Models;
 using Vezeeta.Core.Repositories;
 using Vezeeta.Infrastructure.DbContexts;
 using Vezeeta.Infrastructure.RepositoriesImplementation;
