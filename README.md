@@ -13,8 +13,8 @@
 - Patient
 
 ### The project consists of four layers:
-
-- Core Layer
+Main Project : Vezeeta.Core
+- Core Layer (Vezeeta.Core)
   --
   - Models
     - Appointment
@@ -31,7 +31,7 @@
     - IPatientRepository
     - IDoctorRepository
   
-- Infrastructure Layer
+- Infrastructure Layer (Vezeeta.Infrastructure)
   --
   - Dbcontexts
     - VezeetaContext
@@ -40,7 +40,7 @@
     - PatientRepository
     - DoctorRepository
   - Migrations
-- Services Layer
+- Services Layer (Vezeeta.Services)
   --
   - Interfaces
     - IAdminServices
@@ -50,7 +50,7 @@
     - AdminServices
     - DoctorServices
     - PatientServices
-- Presentation Layer
+- Presentation Layer (Vezeeta.Presentation.API)
   --
   - API Endpoints Controller
     - AdminController
