@@ -14,13 +14,13 @@ namespace Vezeeta.Core.Repositories
     public interface IDoctorRepository
     {
         public HttpStatusCode login (string email, string password);
-        public string GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1);
+        public dynamic GetAll(int doctorId, DayOfWeek searchDate, int pageSize = 10, int pageNumber = 1);
 
         public HttpStatusCode ConfirmCheckUp(int bookingID);
 
         public HttpStatusCode Add(AddAppointmentDTO appointmentInfo);
 
-        public HttpStatusCode Edit(TimeSpan time, DayOfWeek day);
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID);
 
         public HttpStatusCode Delete(TimeSpan time, DayOfWeek day);
     }

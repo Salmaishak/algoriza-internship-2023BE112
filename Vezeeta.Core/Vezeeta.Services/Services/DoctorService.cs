@@ -38,7 +38,7 @@ namespace Vezeeta.Services.Services
             return repository.Add (appointmentInfo);
         }
 
-        public string GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1)
+        public dynamic GetAll(int doctorId, DayOfWeek searchDate, int pageSize = 10, int pageNumber = 1)
         {
             return repository.GetAll (doctorId, searchDate, pageSize, pageNumber);
         }
@@ -48,9 +48,9 @@ namespace Vezeeta.Services.Services
            return repository.ConfirmCheckUp (bookingID);
         }
 
-        public HttpStatusCode Edit(TimeSpan time, DayOfWeek day)
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID)
         {
-            throw new NotImplementedException();
+         return repository.UpdateAppointment (timeslotID, time, day, doctorID); 
         }
 
         public HttpStatusCode Delete(TimeSpan time, DayOfWeek day)

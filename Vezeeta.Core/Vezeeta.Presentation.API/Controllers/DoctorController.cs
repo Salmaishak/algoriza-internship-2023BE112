@@ -32,7 +32,7 @@ namespace Vezeeta.Presentation.API.Controllers
 
         }
 
-        [Route("/api/doctors/[action]")]
+        [Route("/api/doctors/setting/[action]")]
         [HttpPost]
       
         public HttpStatusCode Add(AddAppointmentDTO appointmentInfo)
@@ -47,13 +47,45 @@ namespace Vezeeta.Presentation.API.Controllers
            return doctorService.ConfirmCheckUp(bookingid);
          
         }
-        [Route("/api/doctors/[action]")]
-        [HttpPatch]
-        public string GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1)
+        [Route("/api/doctors/booking/[action]")]
+        [HttpGet]
+        public dynamic GetAll(int doctorId, DayOfWeek searchDate, int pageSize = 10, int pageNumber = 1)
         {
             return doctorService.GetAll(doctorId, searchDate, pageSize, pageNumber);
         }
+        [Route("/api/doctors/setting/[action]")]
+        [HttpPatch]
+        public HttpStatusCode UpdateAppointment (int timeslotID,TimeSpan time, DayOfWeek day, int doctorID)
+        {
+            var bookingCheck = _context.Bookings.Where(d => d.timeslot.SlotId == timeslotID &&
+          d.BookingStatus==Status.pending);
+            //if it exists here it is booked
 
+            if (bookingCheck.Any())
+            {
+                return HttpStatusCode.Unauthorized;
+            }
+            else
+            {   //else it doesn't exist in booking, so we it must be in appointments
+                var appointment = _context.Appointments.Where(a=>a.day== day ).FirstOrDefault();
+                var timeslot = _context.TimeSlots.Where(a=>a.SlotId== timeslotID).FirstOrDefault();
+                if (appointment== null || timeslot==null)
+                {
+                    // this day doesnt have appointments so i will display error not found, he can use Add to add in this day
+                    return HttpStatusCode.NotFound;
+                }
+                else
+                {
+                    //change time of this timeslot
+                    timeslot.Time = time;
+                    _context.SaveChanges();
+                    return HttpStatusCode.OK;
+                }
+             
+
+            }
+
+        }
 
         public IActionResult Index()
         {

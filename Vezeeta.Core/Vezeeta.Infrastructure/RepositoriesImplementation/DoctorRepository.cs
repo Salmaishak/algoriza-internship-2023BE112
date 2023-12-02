@@ -38,13 +38,39 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             throw new NotImplementedException();
         }
 
-        public HttpStatusCode Edit(TimeSpan time, Core.Models.DayOfWeek day)
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID)
         {
-            throw new NotImplementedException();
+            var bookingCheck = _context.Bookings.Where(d => d.timeslot.SlotId == timeslotID &&
+          d.BookingStatus == Status.pending);
+            //if it exists here it is booked
+
+            if (bookingCheck.Any())
+            {
+                return HttpStatusCode.Unauthorized;
+            }
+            else
+            {   //else it doesn't exist in booking, so we it must be in appointments
+                var appointment = _context.Appointments.Where(a => a.day == day).FirstOrDefault();
+                var timeslot = _context.TimeSlots.Where(a => a.SlotId == timeslotID).FirstOrDefault();
+                if (appointment == null || timeslot == null)
+                {
+                    // this day doesnt have appointments so i will display error not found, he can use Add to add in this day
+                    return HttpStatusCode.NotFound;
+                }
+                else
+                {
+                    //change time of this timeslot
+                    timeslot.Time = time;
+                    _context.SaveChanges();
+                    return HttpStatusCode.OK;
+                }
+
+
+            }
+
         }
 
-
-        public string GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1)
+        public dynamic GetAll(int doctorId, DayOfWeek searchDate , int pageSize = 10, int pageNumber = 1)
         {
             var query = _context.Bookings
                 .Join(
@@ -73,9 +99,8 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 )
                 .Where(joinedAppointment =>
                     joinedAppointment.JoinedTimeSlot.JoinedUser.Joined.Doctor.doctorid == doctorId &&
-                    (!searchDate.HasValue ||
-                     (int)joinedAppointment.Appointment.day == (int)searchDate.Value.DayOfWeek &&
-                     joinedAppointment.JoinedTimeSlot.TimeSlot.Time == searchDate.Value.TimeOfDay)
+                  joinedAppointment.Appointment.day == searchDate
+                  
                 )
                 .Select(joinedAppointment => new
                 {
@@ -85,39 +110,19 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                     Gender = joinedAppointment.JoinedTimeSlot.JoinedUser.User.gender,
                     PhoneNumber = joinedAppointment.JoinedTimeSlot.JoinedUser.User.phoneNumber,
                     Email = joinedAppointment.JoinedTimeSlot.JoinedUser.User.email,
-                    DateOfBirth = joinedAppointment.JoinedTimeSlot.JoinedUser.User.dateOfBirth,
-                    DateTime = CalculateDateTime(joinedAppointment.JoinedTimeSlot.TimeSlot.Time,
-                                                 (int)searchDate.Value.DayOfWeek)
+                    Age = DateTime.Today.Year- joinedAppointment.JoinedTimeSlot.JoinedUser.User.dateOfBirth.Year,
+                    DateTime = searchDate
                 })
                 .OrderByDescending(appointment => appointment.DateTime)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            return JsonSerializer.Serialize(query);
+            return query;
         }
 
-        private DateTime CalculateDateTime(TimeSpan time, int day)
-        {
-            var today = DateTime.Today;
-            var daysToAdd = ((int)today.DayOfWeek - day + 7) % 7;
-            var targetDay = today.AddDays(-daysToAdd).Date;
-            return targetDay.Add(time);
-        }
 
-        private int CalculateAge(DateTime dateOfBirth)
-        {
-            DateTime today = DateTime.Today;
-            int age = today.Year - dateOfBirth.Year;
-
-            // Check if the birthday has occurred this year
-            if (dateOfBirth.Date > today.AddYears(-age))
-            {
-                age--;
-            }
-
-            return age;
-        }
+       
         public HttpStatusCode Add(AddAppointmentDTO appointmentInfo)
         {
             // get the doctor who is adding the information 
