@@ -18,5 +18,7 @@ namespace Vezeeta.Core.Repositories
 
          public dynamic GetAllBookings(int userId);
         public HttpStatusCode CancelBooking(int patientID, int BookingID);
+
+
     }
 }

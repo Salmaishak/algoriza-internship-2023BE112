@@ -40,6 +40,19 @@ namespace Vezeeta.Presentation.API.Controllers
            return doctorService.Add(appointmentInfo);
         }
 
+        [Route("/api/doctors/[action]")]
+        [HttpPatch]
+        public HttpStatusCode confirmcheckup (int bookingid)
+        {
+           return doctorService.ConfirmCheckUp(bookingid);
+         
+        }
+        [Route("/api/doctors/[action]")]
+        [HttpPatch]
+        public string GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1)
+        {
+            return doctorService.GetAll(doctorId, searchDate, pageSize, pageNumber);
+        }
 
 
         public IActionResult Index()

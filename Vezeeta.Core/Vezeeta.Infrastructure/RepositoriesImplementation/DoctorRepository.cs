@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Vezeeta.Core.Models;
 using Vezeeta.Core.Repositories;
@@ -22,7 +23,14 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         public HttpStatusCode ConfirmCheckUp(int bookingID)
         {
-            throw new NotImplementedException();
+            var booking = _context.Bookings.Where(d => d.BookingID == bookingID).FirstOrDefault();
+            if (booking != null)
+            {
+                booking.BookingStatus = Status.completed;
+                _context.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+            else return HttpStatusCode.NotFound;
         }
 
         public HttpStatusCode Delete(TimeSpan time, Core.Models.DayOfWeek day)
@@ -35,20 +43,67 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Get All bookings 
-        /// </summary>
-        /// <param name="doctorId"></param>
-        /// <param name="searchDate"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="pageNumber"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public dynamic GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1)
+
+        public string GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1)
         {
-            return null;
+            var query = _context.Bookings
+                .Join(
+                    _context.Doctors,
+                    booking => booking.DoctorID,
+                    doctor => doctor.doctorid,
+                    (booking, doctor) => new { Booking = booking, Doctor = doctor }
+                )
+                .Join(
+                    _context.Users,
+                    joined => joined.Booking.patientID,
+                    user => user.userId,
+                    (joined, user) => new { Joined = joined, User = user }
+                )
+                .Join(
+                    _context.TimeSlots,
+                    joinedUser => joinedUser.Joined.Booking.timeSlotID,
+                    timeSlot => timeSlot.SlotId,
+                    (joinedUser, timeSlot) => new { JoinedUser = joinedUser, TimeSlot = timeSlot }
+                )
+                .Join(
+                    _context.Appointments,
+                    joinedTimeSlot => joinedTimeSlot.TimeSlot.AppointmentID,
+                    appointment => appointment.Id,
+                    (joinedTimeSlot, appointment) => new { JoinedTimeSlot = joinedTimeSlot, Appointment = appointment }
+                )
+                .Where(joinedAppointment =>
+                    joinedAppointment.JoinedTimeSlot.JoinedUser.Joined.Doctor.doctorid == doctorId &&
+                    (!searchDate.HasValue ||
+                     (int)joinedAppointment.Appointment.day == (int)searchDate.Value.DayOfWeek &&
+                     joinedAppointment.JoinedTimeSlot.TimeSlot.Time == searchDate.Value.TimeOfDay)
+                )
+                .Select(joinedAppointment => new
+                {
+                    FullName = joinedAppointment.JoinedTimeSlot.JoinedUser.User.fname + " " +
+                               joinedAppointment.JoinedTimeSlot.JoinedUser.User.lname,
+                    Image = joinedAppointment.JoinedTimeSlot.JoinedUser.User.image,
+                    Gender = joinedAppointment.JoinedTimeSlot.JoinedUser.User.gender,
+                    PhoneNumber = joinedAppointment.JoinedTimeSlot.JoinedUser.User.phoneNumber,
+                    Email = joinedAppointment.JoinedTimeSlot.JoinedUser.User.email,
+                    DateOfBirth = joinedAppointment.JoinedTimeSlot.JoinedUser.User.dateOfBirth,
+                    DateTime = CalculateDateTime(joinedAppointment.JoinedTimeSlot.TimeSlot.Time,
+                                                 (int)searchDate.Value.DayOfWeek)
+                })
+                .OrderByDescending(appointment => appointment.DateTime)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return JsonSerializer.Serialize(query);
         }
 
+        private DateTime CalculateDateTime(TimeSpan time, int day)
+        {
+            var today = DateTime.Today;
+            var daysToAdd = ((int)today.DayOfWeek - day + 7) % 7;
+            var targetDay = today.AddDays(-daysToAdd).Date;
+            return targetDay.Add(time);
+        }
 
         private int CalculateAge(DateTime dateOfBirth)
         {

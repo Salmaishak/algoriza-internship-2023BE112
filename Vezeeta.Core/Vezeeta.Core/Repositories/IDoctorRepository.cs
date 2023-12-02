@@ -14,7 +14,7 @@ namespace Vezeeta.Core.Repositories
     public interface IDoctorRepository
     {
         public HttpStatusCode login (string email, string password);
-        public dynamic GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1);
+        public string GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1);
 
         public HttpStatusCode ConfirmCheckUp(int bookingID);
 

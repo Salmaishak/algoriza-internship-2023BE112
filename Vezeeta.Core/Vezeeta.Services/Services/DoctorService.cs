@@ -37,5 +37,25 @@ namespace Vezeeta.Services.Services
         {
             return repository.Add (appointmentInfo);
         }
+
+        public string GetAll(int doctorId, DateTime? searchDate = null, int pageSize = 10, int pageNumber = 1)
+        {
+            return repository.GetAll (doctorId, searchDate, pageSize, pageNumber);
+        }
+
+        public HttpStatusCode ConfirmCheckUp(int bookingID)
+        {
+           return repository.ConfirmCheckUp (bookingID);
+        }
+
+        public HttpStatusCode Edit(TimeSpan time, DayOfWeek day)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HttpStatusCode Delete(TimeSpan time, DayOfWeek day)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
