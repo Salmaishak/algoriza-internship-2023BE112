@@ -64,7 +64,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             }
         }
 
-        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID)
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID) // not done
         {
             var bookingCheck = _context.Bookings.Where(d => d.timeslot.SlotId == timeslotID &&
           d.BookingStatus == Status.pending);

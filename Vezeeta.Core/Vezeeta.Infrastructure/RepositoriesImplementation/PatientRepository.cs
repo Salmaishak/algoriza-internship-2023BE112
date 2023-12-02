@@ -59,7 +59,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
 
             }
-        }
+        } //fix the checking if booked part
 
         public HttpStatusCode CancelBooking(int patientID, int BookingID)
         {
@@ -80,7 +80,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 return HttpStatusCode.BadRequest;
         }
 
-        public dynamic GetAllBookings(int userId)
+        public dynamic GetAllBookings(int userId) // has temp values
         {
             var userBookings = from booking in context.Bookings
                                join doctor in context.Doctors on
