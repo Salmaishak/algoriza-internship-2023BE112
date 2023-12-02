@@ -14,10 +14,9 @@ namespace Vezeeta.Core.Repositories
         public HttpStatusCode Register(User user);
         public HttpStatusCode PatientLogin (string email,  string password);
         public dynamic GetAllDoctors (int page, int pageSize, string search);
-        public HttpStatusCode Booking(TimeSpan time, DayOfWeek day, Discount discount = null);
+        public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0);
 
-        public dynamic GetAllBookings();
-        public HttpStatusCode CancelBooking(TimeSpan time, DayOfWeek day);
-        
+         public dynamic GetAllBookings(int userId);
+        public HttpStatusCode CancelBooking(int patientID, int BookingID);
     }
 }
