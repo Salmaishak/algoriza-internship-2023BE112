@@ -28,9 +28,9 @@ This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.
 - Presentation Layer
   --
   - API Endpoints Controller
- 
-  ## SQL Server Database Diagram: 
-![algo](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/e2736197-66c9-4b19-8432-73f6f348f884)
+
+## SQL Server Database Diagram: 
+![algo](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/f38796cd-343f-47c3-a1c9-99538284e009)
 
 ## Inner Code Enums: 
 - Discount type
