@@ -64,7 +64,7 @@ Main Project : Vezeeta.Core
 ## Email Service 
 - Service Used : SendGrid API
 - Example of Email:
- ![image](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/f68b3fee-0038-4e1b-974f-3f63fe4ff3ee)
+![image](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/e071787f-76d7-4a3d-9845-1a591fd323af)
 
 ## Inner Code Enums: 
 - User Type
