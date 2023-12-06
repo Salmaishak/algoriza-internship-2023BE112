@@ -71,7 +71,7 @@
 ## Email Service 
 - Service Used : SendGrid API
 - Example of Email: <br>
-<img src="https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/e071787f-76d7-4a3d-9845-1a591fd323af" alt="Image" width="800"></img>
+<img src="https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/dc9972b5-64d7-4ce0-bd1b-06a66f75d207" alt="Image" width="800"></img>
 ## Inner Code Enums: 
 - User Type
   - Admin
