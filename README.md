@@ -67,7 +67,8 @@
     - PatientController
 #
 ## SQL Server Database Diagram: 
-![algo](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/f38796cd-343f-47c3-a1c9-99538284e009)
+(created inside SSMS)
+![image](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/c41b68cc-f61d-4d20-beec-f1adf2cba1a3)
 ## Email Service 
 - Service Used : SendGrid API
 - Example of Email: <br>
