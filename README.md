@@ -4,6 +4,13 @@
  <br>
  Student Name: Salma Magdy Ishak
  # 
+ [![SQL](https://img.shields.io/badge/SQL-Used-orange)](https://www.microsoft.com/en-us/sql-server)
+[![SQL Server](https://img.shields.io/badge/SQL%20Server-Used-blue)](https://www.microsoft.com/en-us/sql-server)
+[![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-Used-green)](https://dotnet.microsoft.com/apps/aspnet)
+[![ASP.NET](https://img.shields.io/badge/ASP.NET-Used-blueviolet)](https://dotnet.microsoft.com/apps/aspnet)
+[![EF Core](https://img.shields.io/badge/EF%20Core-Used-success)](https://docs.microsoft.com/en-us/ef/core/)
+[![ASP.NET Core Web API](https://img.shields.io/badge/ASP.NET%20Core%20Web%20API-Used-yellow)](https://docs.microsoft.com/en-us/aspnet/core/web-api/)
+
  ## Project Overview:
 #### This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Entity Framework and Onion Architecture.
 #
