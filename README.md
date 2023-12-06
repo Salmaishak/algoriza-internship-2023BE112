@@ -15,21 +15,11 @@
  ## Project Overview:
 #### This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Entity Framework and Onion Architecture.
 #
-# Table of contents: 
-* [ Project Entities ](projectEntities)
-* [Onion Architecture](Onion)
-* [Database Diagram](databaseDia)
-* [Email Service Used](email)
-* [Enums Used](enums)
-
-  #
-<a name="projectEntities"></a>
-### Project Entities Consists of: 
+## Project Entities Consists of: 
 - Admin
 - Doctors
 - Patient
-<a name="Onion"></a>
-### The project follows Onion Architecture, it consists of four layers:
+## Onion Architecture, it consists of four layers:
 <b> <i> --> Main Project : Vezeeta.Core </b> </i>
 - Core Layer (Vezeeta.Core)
   --
@@ -76,15 +66,12 @@
     - DoctorController
     - PatientController
 #
-<a name="databaseDia"></a>
 ## SQL Server Database Diagram: 
 ![algo](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/f38796cd-343f-47c3-a1c9-99538284e009)
-<a name="email"></a>
 ## Email Service 
 - Service Used : SendGrid API
-- Example of Email:
-![image](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/e071787f-76d7-4a3d-9845-1a591fd323af)
-<a name="enums"></a>
+- Example of Email: <br>
+<img src="https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/e071787f-76d7-4a3d-9845-1a591fd323af" alt="Image" width="800"></img>
 ## Inner Code Enums: 
 - User Type
   - Admin
