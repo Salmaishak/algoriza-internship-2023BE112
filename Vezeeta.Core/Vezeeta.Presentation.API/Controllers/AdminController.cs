@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Vezeeta.Core.DTOs;
+using Vezeeta.Core.Models;
 using Vezeeta.Infrastructure.DbContexts;
 using Vezeeta.Services.Interfaces;
+using Vezeeta.Services.Services;
 
 namespace Vezeeta.Presentation.API.Controllers
 {
@@ -52,9 +55,38 @@ namespace Vezeeta.Presentation.API.Controllers
              return _adminService.Top10Doctors();
         }
 
+        [Route("/api/admin/doctors/[action]")]
+        [HttpGet]
+        public dynamic GetAllDoctors(int page, int pageSize, string search)
+        {
+            return _adminService.GetAllDoctors(page, pageSize, search); 
+        }
+
+        [Route("/api/admin/doctors/[action]")]
+        [HttpGet]
+        public dynamic getDoctorById( int doctorID)
+        {
+            return _adminService.getDoctorbyId (doctorID);
+        }
+        [Route("/api/admin/doctors/[action]")]
+        [HttpPost]
+
+        public async Task<HttpStatusCode> addDoctor (AddDoctorDTO dto)
+        {
+            int AddeddoctorID = _adminService.addDoctor(dto);
+            EmailService emailService = new EmailService();
+            var userDoc = _context.Users.FirstOrDefault(u => u.userId == AddeddoctorID);
+            return  await emailService.SendEmail(userDoc.email, userDoc.password, (userDoc.fname +" "+ userDoc.lname));
+
+        }
+
+
         public IActionResult Index()
         {
             return View();
         }
+
+
+
     }
 }

@@ -105,7 +105,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                                    DiscountCode = 0, // temp untill i change db 
                                    FinalPrice = 0, // after discount, to saved in booking
                                    Status = booking.BookingStatus
-                               };
+                               }; 
 
             return userBookings;
         }

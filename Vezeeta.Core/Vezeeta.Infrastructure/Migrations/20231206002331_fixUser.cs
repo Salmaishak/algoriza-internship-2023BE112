@@ -4,7 +4,7 @@
 
 namespace Vezeeta.Infrastructure.Migrations
 {
-    public partial class update : Migration
+    public partial class fixUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

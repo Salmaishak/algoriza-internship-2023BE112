@@ -12,8 +12,8 @@ using Vezeeta.Infrastructure.DbContexts;
 namespace Vezeeta.Infrastructure.Migrations
 {
     [DbContext(typeof(VezeetaContext))]
-    [Migration("20231202190630_update")]
-    partial class update
+    [Migration("20231206002331_fixUser")]
+    partial class fixUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

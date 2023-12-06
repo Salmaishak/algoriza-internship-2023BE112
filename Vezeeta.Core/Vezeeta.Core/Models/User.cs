@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 namespace Vezeeta.Core.Models
 {
     public enum Gender { female, male}
     public enum UserType { admin, doctor, patient }
-    public class User
+    public class User  
     {
-
+        
         public  int userId { get; set; }
         public string fname { get; set; }
         [Required]
