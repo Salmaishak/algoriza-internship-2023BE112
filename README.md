@@ -12,7 +12,7 @@
 - Doctors
 - Patient
 
-### The project consists of four layers:
+### The project follows Onion Architecture, it consists of four layers:
 Main Project : Vezeeta.Core
 - Core Layer (Vezeeta.Core)
   --
@@ -46,10 +46,12 @@ Main Project : Vezeeta.Core
     - IAdminServices
     - IPatientServices
     - IDoctorServices
+    - IEmailService
   - Services
     - AdminServices
     - DoctorServices
     - PatientServices
+    - EmailServices
 - Presentation Layer (Vezeeta.Presentation.API)
   --
   - API Endpoints Controller
@@ -59,6 +61,10 @@ Main Project : Vezeeta.Core
 #
 ## SQL Server Database Diagram: 
 ![algo](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/f38796cd-343f-47c3-a1c9-99538284e009)
+## Email Service 
+- Service Used : SendGrid API
+- Example of Email:
+ ![image](https://github.com/Salmaishak/algoriza-internship-BE112/assets/96662980/f68b3fee-0038-4e1b-974f-3f63fe4ff3ee)
 
 ## Inner Code Enums: 
 - User Type
