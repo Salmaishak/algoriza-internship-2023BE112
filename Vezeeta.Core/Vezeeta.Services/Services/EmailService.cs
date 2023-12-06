@@ -17,9 +17,9 @@ namespace Vezeeta.Services.Services
             var from = new EmailAddress("vezeetaproject@gmail.com", "Vezeeta Project");
             var to = new EmailAddress(recipientEmail,doctorName );
             var subject = "Vezeeta Application: You Have been added to the system!";
-            var plainTextContent = $"Hello Doctor,\n" +
+            var plainTextContent = $"Hello Dr. {doctorName},\n Welcome to Vezeeta, \n" +
                 $"This Email is to inform you that you have been added into our system." +
-                $"\nPlease Note Your Password is {password}";
+                $"\nPlease Note Your Password is {password}. This password is unchangable.";
 
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, null);
 
