@@ -20,7 +20,7 @@
 - Doctors
 - Patient
 ## Onion Architecture, it consists of four layers:
-<b> <i> --> Main Project : Vezeeta.Core </b> </i>
+<b> <i> --> Main Project : VezeetaEndPoints </b> </i>
 - Core Layer (Vezeeta.Core)
   --
   - Models
