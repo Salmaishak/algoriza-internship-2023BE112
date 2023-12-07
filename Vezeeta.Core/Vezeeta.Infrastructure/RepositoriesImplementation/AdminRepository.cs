@@ -228,7 +228,32 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         public HttpStatusCode EditDoctor(int doctorID, AddDoctorDTO doctor)
         {
-            throw new NotImplementedException();
+            var findDoctor = _context.Doctors.FirstOrDefault(d => d.doctorid == doctorID);
+            if (findDoctor != null)
+            {
+                User doc = new User()
+                {
+                    fname = doctor.fname,
+                    lname = doctor.lname,
+                    email = doctor.email,
+                    dateOfBirth = doctor.dateOfBirth,
+                    image = doctor.image,
+                    phoneNumber = doctor.phone,
+                    gender = doctor.gender,
+                    password = generatePassword(), // Change the length of the password here
+                    type = UserType.doctor
+                };
+                _context.Set<User>().Update(doc);
+                _context.SaveChanges();
+
+                _context.Database.ExecuteSqlRaw($"update Doctors set price ={doctor.price} and specializationID = {doctor.specializationID} where doctorid= {doctorID} );");
+
+                _context.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+            else
+             return   HttpStatusCode.NotFound;
+
         }
 
         public HttpStatusCode DeleteDoctor(int doctorID)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Vezeeta.Core.DTOs;
@@ -18,5 +19,22 @@ namespace Vezeeta.Services.Interfaces
         public dynamic GetAllDoctors(int page, int pageSize, string search);
         public dynamic getDoctorbyId(int doctorId);
         public int addDoctor(AddDoctorDTO dto);
+
+        public HttpStatusCode EditDoctor(int doctorID, AddDoctorDTO doctor);
+
+        public HttpStatusCode DeleteDoctor(int doctorID);
+
+        public dynamic GetallPatients(int page, int pageSize, string search);
+
+        public dynamic getPatientByID(int patientId);
+
+        public HttpStatusCode AddDiscount(DiscountDTO discountInfo);
+
+        public HttpStatusCode EditDiscount(int discountID, DiscountDTO discountInfo);
+
+        public HttpStatusCode DeleteDiscount(int discountID);
+
+        public HttpStatusCode DeactivateDiscount(int discountID);
     }
+
 }

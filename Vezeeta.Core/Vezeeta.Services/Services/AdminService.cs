@@ -12,6 +12,7 @@ using Vezeeta.Services.Interfaces;
 
 namespace Vezeeta.Services.Services
 {
+
     public class AdminService : IAdminService
     {
         private readonly IAdminRepository repository;
@@ -58,6 +59,46 @@ namespace Vezeeta.Services.Services
         public dynamic Top5Specializations()
         {
             return repository.Top5Specializations();
+        }
+
+        public HttpStatusCode EditDoctor(int doctorID, AddDoctorDTO doctor)
+        {
+            return repository.EditDoctor(doctorID, doctor);
+            }
+
+        public HttpStatusCode DeleteDoctor(int doctorID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public dynamic GetallPatients(int page, int pageSize, string search)
+        {
+            throw new NotImplementedException();
+        }
+
+        public dynamic getPatientByID(int patientId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HttpStatusCode AddDiscount(DiscountDTO discountInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HttpStatusCode EditDiscount(int discountID, DiscountDTO discountInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HttpStatusCode DeleteDiscount(int discountID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HttpStatusCode DeactivateDiscount(int discountID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

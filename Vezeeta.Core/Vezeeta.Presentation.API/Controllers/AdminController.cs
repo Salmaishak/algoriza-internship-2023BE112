@@ -8,14 +8,15 @@ using Vezeeta.Services.Services;
 
 namespace Vezeeta.Presentation.API.Controllers
 {
-
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
         private readonly VezeetaContext _context;
-        public AdminController(IAdminService adminService, VezeetaContext context) {
+        private readonly IEmailService emailservice;
+        public AdminController(IAdminService adminService, VezeetaContext context, IEmailService email) {
             _adminService = adminService;
             _context = context;
+            emailservice = email;
         }
     
         [Route("/api/admin/dashboard/[action]")]
@@ -74,9 +75,15 @@ namespace Vezeeta.Presentation.API.Controllers
         public async Task<HttpStatusCode> addDoctor (AddDoctorDTO dto)
         {
             int AddeddoctorID = _adminService.addDoctor(dto);
-            EmailService emailService = new EmailService();
-            var userDoc = _context.Users.FirstOrDefault(u => u.userId == AddeddoctorID);
-            return  await emailService.SendEmail(userDoc.email, userDoc.password, (userDoc.fname +" "+ userDoc.lname));
+           var userDoc = _context.Users.FirstOrDefault(u => u.userId == AddeddoctorID);
+            return  await emailservice.SendEmail(userDoc.email, userDoc.password, (userDoc.fname +" "+ userDoc.lname));
+
+        }
+        [Route("/api/admin/doctors/[action]")]
+        [HttpPatch]
+        public async Task<HttpStatusCode> editDoctor(int doctorID, AddDoctorDTO dto)
+        {
+            return _adminService.EditDoctor(doctorID, dto);
 
         }
 

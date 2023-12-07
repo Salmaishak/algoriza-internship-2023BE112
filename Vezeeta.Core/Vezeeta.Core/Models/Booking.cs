@@ -18,8 +18,8 @@ namespace Vezeeta.Core.Models
         public Doctor Doctor
         { get; set; }
 
-        public int discountId { get; set; }
-        public Discount discount { get; set; }
+        public int? DiscountId { get; set; } // Nullable foreign key
+        public Discount Discount { get; set; }
 
         // final price after discount is to be calculated here 
         public float finalPrice { get; set; }

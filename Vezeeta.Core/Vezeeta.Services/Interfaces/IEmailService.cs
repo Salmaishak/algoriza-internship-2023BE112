@@ -10,10 +10,11 @@ namespace Vezeeta.Services.Interfaces
 {
     public interface IEmailService
     {
-        
-        public Task SendDoctorAddedEmailAsync(string doctorEmail, string password);
-      
+
+        public  Task<HttpStatusCode> SendEmail(string recipientEmail, string password, string doctorName);
+
+
     }
-    
+
 
 }

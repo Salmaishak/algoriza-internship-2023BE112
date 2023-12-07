@@ -16,5 +16,7 @@ namespace Vezeeta.Core.Models
        public int numOfRequests { get; set; }
         public int valueOfDiscount { get; set; }
         public discountActivity discountActivity { get; set; }
+
+        public List<Booking> bookings { get; set; }
     }
 }

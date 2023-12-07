@@ -3,10 +3,11 @@ using SendGrid.Helpers.Mail;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Vezeeta.Services.Interfaces;
 
 namespace Vezeeta.Services.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         static string SendGridApiKey = "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";
 
