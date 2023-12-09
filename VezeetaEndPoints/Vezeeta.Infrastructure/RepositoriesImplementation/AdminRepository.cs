@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,12 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
     public  class AdminRepository : IAdminRepository
     {
         private readonly VezeetaContext _context;
-        public AdminRepository(VezeetaContext context) { _context = context; }
-    
+
+        public AdminRepository(VezeetaContext context)
+        {
+            _context = context;
+        }
+
 
         public int NumOfDoctors()
         {
@@ -212,14 +217,16 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                     password = generatePassword(), // Change the length of the password here
                     type = UserType.doctor
                 };
+                
+                    _context.Users.Add(doc);
+                    _context.SaveChanges();
 
-                _context.Users.Add(doc);
+                _context.Database.ExecuteSqlRaw($"insert into Doctors values (\"doctor\"+{doc.userId}+\"_id\",{doc.userId},{doctor.price},{doctor.specializationID});");
+
                 _context.SaveChanges();
-
-                _context.Database.ExecuteSqlRaw($"insert into Doctors values ({doc.userId},{doctor.price},{doctor.specializationID});");
-
-                _context.SaveChanges();
-                return doc.userId;
+                    return doc.userId;
+              
+               
 
             }
             else

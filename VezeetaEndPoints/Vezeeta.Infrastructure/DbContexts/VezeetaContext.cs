@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Google;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Vezeeta.Core.Models;
 
-namespace Vezeeta.Infrastructure.DbContexts
+namespace Vezeeta.Infrastructure.DbContexts 
 {
-    public class VezeetaContext : DbContext
+    public class VezeetaContext : IdentityDbContext<IdentityUser>
     {
+        public VezeetaContext(DbContextOptions<VezeetaContext> options) : base(options)
+        {
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<User> AllUsers
         {
@@ -56,7 +63,7 @@ namespace Vezeeta.Infrastructure.DbContexts
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=Vezeeta_Database;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=VezeetaDatabaseFinal;Trusted_Connection=True;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

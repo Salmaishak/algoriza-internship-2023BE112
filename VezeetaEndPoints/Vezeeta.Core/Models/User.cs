@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Identity;
 namespace Vezeeta.Core.Models
 {
     public enum Gender { female, male}
-    public enum UserType { admin, doctor, patient }
-    public class User  
+    public  enum UserType { admin, doctor, patient }
+    public class User  : IdentityUser 
     {
         
         public  int userId { get; set; }

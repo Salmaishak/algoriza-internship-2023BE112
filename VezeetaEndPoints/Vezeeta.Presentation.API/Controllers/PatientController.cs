@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Vezeeta.Core.Models;
@@ -7,6 +8,8 @@ using Vezeeta.Services.Interfaces;
 
 namespace Vezeeta.Presentation.API.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public class PatientController : Controller
     {
 
@@ -58,9 +61,6 @@ namespace Vezeeta.Presentation.API.Controllers
 
            return service.GetAllDoctors(page, pageSize, search);
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+    
     }
 }
