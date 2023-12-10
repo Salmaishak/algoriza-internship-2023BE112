@@ -54,13 +54,13 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
       .Join(
           _context.Doctors,
           booking => booking.DoctorID,
-          doctor => doctor.doctorid,
+          doctor => doctor.Id,
           (booking, doctor) => new { Booking = booking, Doctor = doctor }
       )
       .Join(
           _context.Users,
-          joined => joined.Doctor.userId,
-          user => user.userId,
+          joined => joined.Doctor.Id,
+          user => user.Id,
           (joined, user) => new { Joined = joined, User = user }
       )
       .GroupBy(
@@ -84,7 +84,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 .Join(
                     _context.Doctors,
                     booking => booking.DoctorID,
-                    doctor => doctor.doctorid,
+                    doctor => doctor.Id,
                     (booking, doctor) => new { Booking = booking, Doctor = doctor }
                 )
                 .Join(
