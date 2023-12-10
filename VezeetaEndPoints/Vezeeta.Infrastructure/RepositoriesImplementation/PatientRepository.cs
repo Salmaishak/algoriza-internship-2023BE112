@@ -25,7 +25,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             _userManager = userManager;
         }
 
-        public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0)
+        public HttpStatusCode booking(string patientID, int SlotID, int DiscountID = 0)
         {
             {
                 if (SlotID != 0)
@@ -67,7 +67,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             }
         } //fix the checking if booked part
 
-        public HttpStatusCode CancelBooking(int patientID, int BookingID)
+        public HttpStatusCode CancelBooking(string patientID, int BookingID)
         {
             if (BookingID != 0)
             {
@@ -86,7 +86,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 return HttpStatusCode.BadRequest;
         }
 
-        public dynamic GetAllBookings(int userId) // has temp values
+        public dynamic GetAllBookings(string userId) // has temp values
         {
             var userBookings = from booking in context.Bookings
                                join doctor in context.Doctors on

@@ -8,7 +8,7 @@ namespace Vezeeta.Core.Models
     public class User  : IdentityUser 
     {
         
-        public  int userId { get; set; }
+        public  string userId { get; set; }
         public string fname { get; set; }
         [Required]
         public string lname { get; set; }

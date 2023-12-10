@@ -20,17 +20,17 @@ namespace Vezeeta.Services.Services
             this.patientRepo = patientRepo;
         }
 
-        public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0)
+        public HttpStatusCode booking(string patientID, int SlotID, int DiscountID = 0)
         {
                return  patientRepo.booking(patientID, SlotID, DiscountID);
         }
 
-        public HttpStatusCode CancelBooking(int patientID, int BookingID)
+        public HttpStatusCode CancelBooking(string patientID, int BookingID)
         {
             return patientRepo.CancelBooking(patientID, BookingID);
         }
 
-        public dynamic GetAllBookings(int userId)
+        public dynamic GetAllBookings(string userId)
         {
            return patientRepo.GetAllBookings(userId);
         }

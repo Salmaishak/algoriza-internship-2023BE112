@@ -168,7 +168,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         }
 
-        public dynamic GetDoctorById (int doctorId)
+        public dynamic GetDoctorById (string doctorId)
         {
             var doctor = _context.Doctors.Where(d => d.doctorid == doctorId).FirstOrDefault();
 
@@ -278,24 +278,21 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 return null;
 
         }
-        //needs testing
         public HttpStatusCode EditDoctor(string doctorID, AddDoctorDTO doctor)
         {
             var findDoctor = _context.Doctors.FirstOrDefault(d => d.Id == doctorID);
             if (findDoctor != null)
             {
-                User doc = new User()
-                {
-                    fname = doctor.fname,
-                    lname = doctor.lname,
-                    email = doctor.email,
-                    dateOfBirth = doctor.dateOfBirth,
-                    image = doctor.image,
-                    phoneNumber = doctor.phone,
-                    gender = doctor.gender,
-                    type = UserType.doctor
-                };
-                _context.Set<User>().Update(doc);
+
+                findDoctor.fname = doctor.fname;
+                findDoctor.lname = doctor.lname;
+                findDoctor. email = doctor.email;
+                findDoctor.dateOfBirth = doctor.dateOfBirth;
+                findDoctor.image = doctor.image;
+                findDoctor.phoneNumber = doctor.phone;
+                findDoctor.gender = doctor.gender;
+                findDoctor.type = UserType.doctor;
+                
                 _context.SaveChanges();
 
                 _context.Database.ExecuteSqlRaw($"update Doctors set price ={doctor.price} and specializationID = {doctor.specializationID} where doctorid= {doctorID} );");
@@ -327,32 +324,94 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         public dynamic GetallPatients(int page, int pageSize, string search)
         {
-            throw new NotImplementedException();
+            var patient= _context.Users.Where(p => p.type == UserType.patient).Select(
+                s=> new {s.fname, s.lname, s.email, s.dateOfBirth, s.image, s.gender});
+            return patient;
         }
 
-        public dynamic getPatientByID(int patientId)
+        public dynamic getPatientByID(string patientId)
         {
-            throw new NotImplementedException();
+            var patient = _context.Users.Where(p => p.Id == patientId && p.type == UserType.patient).Select(
+                           s => new { s.fname, s.lname, s.email, s.dateOfBirth, s.image, s.gender });
+            return patient;
         }
 
         public HttpStatusCode AddDiscount(DiscountDTO discountInfo)
         {
-            throw new NotImplementedException();
+            Discount discount = new Discount()
+            {
+                discountName = discountInfo.discountCode,
+                discountType = discountInfo.discountType,
+                valueOfDiscount = discountInfo.value,
+                numOfRequests = discountInfo.NoOfReq,
+                discountActivity= discountActivity.active
+            };
+            _context.Discounts.Add(discount);
+            _context.SaveChanges();
+            return HttpStatusCode.OK;
         }
 
         public HttpStatusCode EditDiscount(int discountID, DiscountDTO discountInfo)
         {
-            throw new NotImplementedException();
+            var findDiscount = _context.Discounts.FirstOrDefault(d => d.discountID == discountID);
+
+            if (findDiscount != null)
+            {
+                // Validate and update properties if the entity exists
+                if (!string.IsNullOrEmpty(discountInfo.discountCode))
+                {
+                    findDiscount.discountName = discountInfo.discountCode;
+                }
+
+                if (discountInfo.discountType != null && discountInfo.discountType != 0)
+                {
+                    findDiscount.discountType = discountInfo.discountType;
+                }
+
+                if (discountInfo.value != null && discountInfo.value != 0)
+                {
+                    findDiscount.valueOfDiscount = discountInfo.value;
+                }
+
+                if (discountInfo.NoOfReq != null && discountInfo.NoOfReq != 0)
+                {
+                    findDiscount.numOfRequests = discountInfo.NoOfReq;
+                }
+
+
+                _context.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+
+            return HttpStatusCode.NotFound; // Return a different status code if the entity wasn't found
         }
+
 
         public HttpStatusCode DeleteDiscount(int discountID)
         {
-            throw new NotImplementedException();
+            var discount = _context.Discounts.FirstOrDefault(d=>d.discountID== discountID);
+            if (discount != null)
+            {
+                _context.Discounts.Remove(discount);
+                _context.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+            else
+                return HttpStatusCode.NotFound;
+          
         }
 
         public HttpStatusCode DeactivateDiscount(int discountID)
         {
-            throw new NotImplementedException();
+            var discount = _context.Discounts.FirstOrDefault(d => d.discountID == discountID);
+            if (discount != null)
+            {
+                discount.discountActivity = discountActivity.deactive;
+                _context.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+            else
+                return HttpStatusCode.NotFound;
         }
     }
 }

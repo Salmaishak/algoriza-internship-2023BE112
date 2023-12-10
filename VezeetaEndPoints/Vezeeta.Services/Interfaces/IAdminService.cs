@@ -18,7 +18,7 @@ namespace Vezeeta.Services.Interfaces
         public dynamic Top10Doctors();
 
         public dynamic GetAllDoctors(int page, int pageSize, string search);
-        public dynamic getDoctorbyId(int doctorId);
+        public dynamic getDoctorbyId(string doctorId);
         public  Task<string> AddDoctor(AddDoctorDTO doctor);
 
         public HttpStatusCode EditDoctor(string doctorID, AddDoctorDTO doctor);
@@ -26,7 +26,7 @@ namespace Vezeeta.Services.Interfaces
         public  Task<HttpStatusCode> DeleteDoctor(string doctorID);
         public dynamic GetallPatients(int page, int pageSize, string search);
 
-        public dynamic getPatientByID(int patientId);
+        public dynamic getPatientByID(string patientId);
 
         public HttpStatusCode AddDiscount(DiscountDTO discountInfo);
 

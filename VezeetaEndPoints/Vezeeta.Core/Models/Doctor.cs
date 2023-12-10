@@ -9,7 +9,7 @@ namespace Vezeeta.Core.Models
 {
     public class Doctor : User
     {
-        public int doctorid { get; set; }
+        public string doctorid { get; set; }
         public float price { get; set; }
             public int specializationID { get; set; }
             public Specialization Specialization { get; set; }

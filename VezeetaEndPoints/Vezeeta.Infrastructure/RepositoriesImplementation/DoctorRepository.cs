@@ -64,7 +64,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             }
         }
 
-        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID) // not done
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, string doctorID) // not done
         {
             var bookingCheck = _context.Bookings.Where(d => d.timeslot.SlotId == timeslotID &&
           d.BookingStatus == Status.pending);
@@ -96,19 +96,19 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         }
 
-        public dynamic GetAll(int doctorId, DayOfWeek searchDate , int pageSize = 10, int pageNumber = 1)
+        public dynamic GetAll(string doctorId, DayOfWeek searchDate , int pageSize = 10, int pageNumber = 1)
         {
             var query = _context.Bookings
                 .Join(
                     _context.Doctors,
                     booking => booking.DoctorID,
-                    doctor => doctor.doctorid,
+                    doctor => doctor.Id,
                     (booking, doctor) => new { Booking = booking, Doctor = doctor }
                 )
                 .Join(
                     _context.Users,
                     joined => joined.Booking.patientID,
-                    user => user.userId,
+                    user => user.Id,
                     (joined, user) => new { Joined = joined, User = user }
                 )
                 .Join(
@@ -147,12 +147,10 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             return query;
         }
 
-
-       
         public HttpStatusCode Add(AddAppointmentDTO appointmentInfo)
         {
             // get the doctor who is adding the information 
-            var doctor = _context.Doctors.FirstOrDefault<Doctor>(d => d.doctorid == appointmentInfo.doctorId);
+            var doctor = _context.Doctors.FirstOrDefault<Doctor>(d => d.Id == appointmentInfo.doctorId);
             // get last appointment ID to add on it
             int lastAppointmentID = _context.Appointments.OrderByDescending(a => a.Id).FirstOrDefault()?.Id ?? 0;
             // if the doctor is null (Unauthorized) 
@@ -165,7 +163,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 {
                     DayOfWeek dayWeek = entry.Key;
                     List<TimeSpan> timeSlots = entry.Value;
-                    _context.Appointments.Add(new Appointment() { day = dayWeek, doctorID = doctor.doctorid });
+                    _context.Appointments.Add(new Appointment() { day = dayWeek, doctorID = doctor.Id });
                     lastAppointmentID++;
                    
                     _context.SaveChanges();
@@ -187,18 +185,6 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             return HttpStatusCode.Unauthorized; // Doctor not found 401
         }
 
-        public HttpStatusCode login(string email, string password)
-        {
-            var doctor = _context.Users.FirstOrDefault<User>(e =>e.email.Equals(email));
-
-            if (doctor != null && doctor.type== UserType.doctor)
-            {
-                if (doctor.password == password)
-                return HttpStatusCode.OK; 
-                else 
-                    return HttpStatusCode.Unauthorized; 
-            }
-            return HttpStatusCode.Unauthorized;
-        }
+       
     }
 }

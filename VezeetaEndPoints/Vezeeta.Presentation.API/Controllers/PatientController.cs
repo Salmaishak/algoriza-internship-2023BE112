@@ -29,21 +29,21 @@ namespace Vezeeta.Presentation.API.Controllers
        
         [Authorize(Roles = "Patient")]
         [HttpPost]
-        public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0) {
+        public HttpStatusCode booking(string patientID, int SlotID, int DiscountID = 0) {
             
             return service.booking(patientID, SlotID, DiscountID);
           
         }
         [Authorize(Roles = "Patient")]
         [HttpPatch]
-        public HttpStatusCode CancelBooking(int patientID, int BookingID)
+        public HttpStatusCode CancelBooking(string patientID, int BookingID)
         {
             return service.CancelBooking(patientID, BookingID);
         }
         [Authorize(Roles = "Patient")]
         [HttpGet]
 
-        public dynamic GetAll(int userId)
+        public dynamic GetAll(string userId)
         {
             return service.GetAllBookings(userId);
         }

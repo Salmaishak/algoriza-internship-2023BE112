@@ -29,7 +29,7 @@ namespace Vezeeta.Services.Services
            return repository.GetAllDoctors(page, pageSize, search);
         }
 
-        public dynamic getDoctorbyId(int doctorId)
+        public dynamic getDoctorbyId(string doctorId)
         {
             return repository.GetDoctorById(doctorId);
                 
@@ -79,7 +79,7 @@ namespace Vezeeta.Services.Services
             return repository.GetallPatients(page, pageSize, search);
         }
 
-        public dynamic getPatientByID(int patientId)
+        public dynamic getPatientByID(string patientId)
         {
             return repository.getPatientByID(patientId);
         }

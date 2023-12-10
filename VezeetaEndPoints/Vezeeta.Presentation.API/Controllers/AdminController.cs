@@ -10,7 +10,7 @@ using Vezeeta.Services.Services;
 
 namespace Vezeeta.Presentation.API.Controllers
 {
-    
+
     [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]/[action]")]
@@ -19,7 +19,7 @@ namespace Vezeeta.Presentation.API.Controllers
         private readonly IAdminService _adminService;
         private readonly VezeetaContext _context;
         private readonly IEmailService emailservice;
-        private readonly UserManager<IdentityUser> _userManager; 
+        private readonly UserManager<IdentityUser> _userManager;
         public AdminController(IAdminService adminService, VezeetaContext context,
             IEmailService email, UserManager<IdentityUser> userManager)
         {
@@ -37,7 +37,7 @@ namespace Vezeeta.Presentation.API.Controllers
 
         [HttpGet]
 
-        public int NumOfPatients ()
+        public int NumOfPatients()
         {
             return _adminService.NumOfPatients();
         }
@@ -51,32 +51,32 @@ namespace Vezeeta.Presentation.API.Controllers
         [HttpGet]
         public dynamic Top5Specializations()
         {
-          return (_adminService.Top5Specializations());
+            return (_adminService.Top5Specializations());
 
         }
 
         [HttpGet]
-        public dynamic Top10Doctors ()
+        public dynamic Top10Doctors()
         {
-             return _adminService.Top10Doctors();
+            return _adminService.Top10Doctors();
         }
 
-        
+
 
         [HttpGet]
         public dynamic GetAllDoctors(int page, int pageSize, string search)
         {
-            return _adminService.GetAllDoctors(page, pageSize, search); 
+            return _adminService.GetAllDoctors(page, pageSize, search);
         }
 
         [HttpGet]
-        public dynamic getDoctorById( int doctorID)
+        public dynamic getDoctorById(string doctorID)
         {
-            return _adminService.getDoctorbyId (doctorID);
+            return _adminService.getDoctorbyId(doctorID);
         }
         [HttpPost]
 
-        public  Task<string> AddDoctor(AddDoctorDTO doctor)
+        public Task<string> AddDoctor(AddDoctorDTO doctor)
         {
             return _adminService.AddDoctor(doctor);
         }
@@ -91,9 +91,39 @@ namespace Vezeeta.Presentation.API.Controllers
         {
             return await _adminService.DeleteDoctor(doctorID);
         }
+        [HttpGet]
+        public dynamic GetallPatients(string search, int page=1, int pageSize=10)
+        {
+            return _adminService.GetallPatients(page, pageSize, search);
+        }
+        [HttpGet]
+        public dynamic getPatientByID(string patientId)
+        {
+            return _adminService.getPatientByID(patientId);
+        }
+        [HttpPut]
+        public HttpStatusCode AddDiscount(DiscountDTO discountInfo)
+        {
+            return _adminService.AddDiscount(discountInfo);
+        }
+        [HttpPatch]
+        public HttpStatusCode EditDiscount(int discountID, DiscountDTO discountInfo)
+        {
+            return _adminService.EditDiscount(discountID, discountInfo);
+        }
+        [HttpGet]
+        public HttpStatusCode DeleteDiscount(int discountID)
+        {
+            return _adminService.DeleteDiscount(discountID);
+        }
+        [HttpGet]
+        public HttpStatusCode DeactivateDiscount(int discountID)
+        {
+            return _adminService.DeactivateDiscount(discountID);
+        }
 
 
-        
+
 
     }
 }

@@ -15,6 +15,6 @@ namespace Vezeeta.Core.DTOs
         public string discountCode {  get; set; }
         public int NoOfReq {  get; set; }
         public discountType discountType { get; set; }
-        public float value {  get; set; }
+        public int value {  get; set; }
     }
 }

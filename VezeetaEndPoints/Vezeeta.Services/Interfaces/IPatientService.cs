@@ -14,10 +14,10 @@ namespace Vezeeta.Services.Interfaces
     {
         public Task<string> Register(PatientDTO patient);
         public dynamic GetAllDoctors(int page, int pageSize, string search);
-        public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0);
+        public HttpStatusCode booking(string patientID, int SlotID, int DiscountID = 0);
 
-         public dynamic GetAllBookings(int userId);
-        public HttpStatusCode CancelBooking(int patientID, int BookingID);
+         public dynamic GetAllBookings(string userId);
+        public HttpStatusCode CancelBooking(string patientID, int BookingID);
 
 
     }

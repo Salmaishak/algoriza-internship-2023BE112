@@ -10,11 +10,11 @@ namespace Vezeeta.Core.Models
     public class Booking
     {
         public int BookingID { get; set; }
-        public int patientID { get; set; }
+        public string patientID { get; set; }
         public User Patient
         { get; set; }
 
-        public int DoctorID { get; set; }
+        public string DoctorID { get; set; }
         public Doctor Doctor
         { get; set; }
 

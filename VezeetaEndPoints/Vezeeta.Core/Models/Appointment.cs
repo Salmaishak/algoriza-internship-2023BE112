@@ -13,7 +13,7 @@ namespace Vezeeta.Core.Models
         // appointment ID
         public int Id { get; set; }
         //doctor 
-        public int doctorID { get; set; }
+        public string doctorID { get; set; }
         //doctor object for creating the realtionship 
         public Doctor doctor { get; set; }
          

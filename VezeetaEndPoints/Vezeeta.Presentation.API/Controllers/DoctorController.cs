@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Net;
@@ -11,7 +12,9 @@ using DayOfWeek = Vezeeta.Core.Models.DayOfWeek;
 
 namespace Vezeeta.Presentation.API.Controllers
 {
-   
+
+    [Authorize(Roles = "Doctor")]
+    [ApiController]
     public class DoctorController : Controller
     {
         private readonly IDoctorService doctorService;
@@ -24,14 +27,7 @@ namespace Vezeeta.Presentation.API.Controllers
             this._logger = logger;
         }
 
-        [Route("/api/doctors/[action]")]
-        [HttpGet]
-        public HttpStatusCode login (string email, string password)
-        {
-            return doctorService.login (email, password);
-
-        }
-
+       
         [Route("/api/doctors/setting/[action]")]
         [HttpPost]
       
@@ -49,13 +45,13 @@ namespace Vezeeta.Presentation.API.Controllers
         }
         [Route("/api/doctors/booking/[action]")]
         [HttpGet]
-        public dynamic GetAll(int doctorId, DayOfWeek searchDate, int pageSize = 10, int pageNumber = 1)
+        public dynamic GetAll(string doctorId, DayOfWeek searchDate, int pageSize = 10, int pageNumber = 1)
         {
             return doctorService.GetAll(doctorId, searchDate, pageSize, pageNumber);
         }
         [Route("/api/doctors/setting/Update")]
         [HttpPatch]
-        public HttpStatusCode UpdateAppointment (int timeslotID,TimeSpan time, DayOfWeek day, int doctorID)
+        public HttpStatusCode UpdateAppointment (int timeslotID,TimeSpan time, DayOfWeek day, string doctorID)
         {
             return doctorService.UpdateAppointment(timeslotID, time, day, doctorID);
 
@@ -68,9 +64,5 @@ namespace Vezeeta.Presentation.API.Controllers
             return doctorService.Delete(timeslotID);
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
     }
 }

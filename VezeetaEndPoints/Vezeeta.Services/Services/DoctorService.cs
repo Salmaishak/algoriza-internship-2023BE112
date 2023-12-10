@@ -22,23 +22,14 @@ namespace Vezeeta.Services.Services
         {
             this.repository = repository;
         }
-        public HttpStatusCode login (string email, string password)
-        {
-
-
-            HttpStatusCode tr = repository.login (email, password);
-                return tr;
-            
-          
-           
-        }
+       
 
         public HttpStatusCode Add(AddAppointmentDTO appointmentInfo)
         {
             return repository.Add (appointmentInfo);
         }
 
-        public dynamic GetAll(int doctorId, DayOfWeek searchDate, int pageSize = 10, int pageNumber = 1)
+        public dynamic GetAll(string doctorId, DayOfWeek searchDate, int pageSize = 10, int pageNumber = 1)
         {
             return repository.GetAll (doctorId, searchDate, pageSize, pageNumber);
         }
@@ -48,7 +39,7 @@ namespace Vezeeta.Services.Services
            return repository.ConfirmCheckUp (bookingID);
         }
 
-        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, int doctorID)
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, string doctorID)
         {
          return repository.UpdateAppointment (timeslotID, time, day, doctorID); 
         }
