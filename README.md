@@ -23,8 +23,9 @@
 - Doctors
 - Patient
 ## User Authentication: 
-User authentication and Authorization is done using JWT Token, with roles based on our 3 project entities.
-Role is determined with user login with his given creditionals. He is given the access to only his authorized endpoints.
+User authentication and Authorization is done using <b>JWT Token</b>, with roles based on our 3 project entities.
+Role, for all entities types, is determined with user login with his given creditionals. He is given the access to only his authorized endpoints.
+Admin Data Has been seeded into the database as the App has one admin. 
 ```
 builder.Services.AddAuthorization(options =>
 {
