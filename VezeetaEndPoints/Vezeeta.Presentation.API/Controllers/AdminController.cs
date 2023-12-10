@@ -64,7 +64,7 @@ namespace Vezeeta.Presentation.API.Controllers
 
 
         [HttpGet("Doctors/[action]")]
-        public dynamic GetAllDoctors(int page, int pageSize, string search)
+        public dynamic GetAllDoctors(string search, int page=1, int pageSize=10 )
         {
             return _adminService.GetAllDoctors(page, pageSize, search);
         }
