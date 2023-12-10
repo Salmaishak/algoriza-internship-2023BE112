@@ -38,11 +38,11 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             var checkTimeSlot = _context.Bookings.
                 Where(b => b.timeSlotID == timeslotID).FirstOrDefault();
 
-            if (checkTimeSlot != null)
+            if (checkTimeSlot != null) // check if time slot has bookings 
             {
                 return HttpStatusCode.Unauthorized;
             }
-            else
+            else // if not it can be deleted
             {
               var timeslot= _context.TimeSlots.FirstOrDefault(t => t.SlotId == timeslotID);
                 _context.TimeSlots.Remove(timeslot);

@@ -25,43 +25,13 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             _userManager = userManager;
         }
 
-        private int CalculateFinalPrice(int doctorPrice, int discountValue, discountType type)
-        {
-            if (type == discountType.percentage)
-            {
-                return doctorPrice - ((int)(doctorPrice * discountValue));
-            }
-            else
-            {
-                return doctorPrice - discountValue;
-            }
-        }
-
-        private bool IsDiscountEligible(int discountID, string patientID, int countOfRequests, string doctorID)
-        {
-            if (discountID != 0)
-            {
-                var discount = context.Discounts.FirstOrDefault(d => d.discountID == discountID);
-
-                if (discount != null && discount.numOfRequests == countOfRequests)
-                {
-                    var doctor = context.Doctors.FirstOrDefault(d => d.Id == doctorID);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool IsTimeSlotBooked(string doctorID, int timeSlotID)
-        {
-            return context.Bookings.Any(b => b.DoctorID == doctorID && b.timeSlotID == timeSlotID && b.BookingStatus == Status.pending);
-        }
-
+       
+        // booking function for patient
         public HttpStatusCode booking(string patientID, int SlotID, int DiscountID = 4)
         {
             int finalPrice = 0;
             if (SlotID != 0)
-            {
+            {   
                 var query = from appointment in context.Appointments
                             join timeslot in context.TimeSlots
                             on appointment.Id equals timeslot.AppointmentID
@@ -80,7 +50,8 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                     var countOfRequests = context.Bookings.Where(b => b.patientID == patientID).Count();
                     var doctorPrice = context.Doctors.FirstOrDefault(d => d.Id == doctorID).price;
                     if (IsDiscountEligible(DiscountID, patientID, countOfRequests, doctorID))
-                    {
+                    { 
+                        // if discount is eligible calculate the discount value
                         var discount = context.Discounts.FirstOrDefault(d => d.discountID == DiscountID);
 
 
@@ -88,6 +59,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                     }
                     else
                         finalPrice = (int)doctorPrice;
+                    //other wise the finalprice is the doctor's original price
 
                     var booking = new Booking()
                     {
@@ -98,6 +70,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                         DiscountId = DiscountID,
                         finalPrice = finalPrice
                     };
+                    // add the booking to database
                     context.Bookings.Add(booking);
                     context.SaveChanges();
 
@@ -121,15 +94,17 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             if (BookingID != 0)
             {
                 Booking booking = context.Bookings.Where<Booking>(b => b.BookingID == BookingID).FirstOrDefault();
-                
+                 
+                // check the booking ID exists
                 if (booking != null&& booking.patientID==patientID)
                 {
-                    booking.BookingStatus = Status.canceled;
+                    booking.BookingStatus = Status.canceled; // Change Status to Canceled
                     context.SaveChanges();
+                    return HttpStatusCode.OK;
                 }
                 else
                     return HttpStatusCode.Unauthorized;
-                return HttpStatusCode.OK;
+               
 
             }
             else
@@ -162,69 +137,70 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                                    FinalPrice = booking.finalPrice,
                                    Status = booking.BookingStatus
                                }; 
+            // to get a specific output , we join tables together
 
             return userBookings;
         }
 
-        public dynamic GetAllDoctors(int page, int pageSize, string search)
-        {
-            var doctors = context.Doctors
-     .Select(doctor => new
-     {
-         doctor.Id,
-         doctor.price,
-
-         specialization = context.Specializations
-                     .Where(s => s.specializationID == doctor.specializationID)
-                     .Select(s => s.specializationName)
-                     .FirstOrDefault(),
-         doctorAppointments = context.Appointments
-                     .Where(a => a.doctorID == doctor.Id)
-                     .Join(
-                         context.TimeSlots,
-                         appointment => appointment.Id,
-                         timeSlot => timeSlot.AppointmentID,
-                         (appointment, timeSlot) => new
-                         {
-                             day = appointment.day.ToString(),
-                             timeSlot.Time
-                         })
-                     .ToList(),
-         doctor.fname,
-         doctor.lname,
-         doctor.email,
-         doctor.image,
-         doctor.phoneNumber,
-         gender = doctor.gender.ToString()
-     })
-             .ToList();
-
-            if (!string.IsNullOrWhiteSpace(search))
+            public dynamic GetAllDoctors(int page, int pageSize, string search)
             {
-                var searchedDocs = from d in doctors
-                                   where d.fname.Contains(search) ||
-                                   d.email.Contains(search) ||
-                                   d.specialization.Contains(search) ||
-                                   d.gender.Contains(search) ||
-                                   d.phoneNumber.Contains(search) ||
-                                   d.doctorAppointments.Select(a => a.day).Contains(search)
-                                   select d;
+                var doctors = context.Doctors
+         .Select(doctor => new
+         {
+             doctor.Id,
+             doctor.price,
 
-                var paginationDoc = searchedDocs.Skip((page - 1) * pageSize).Take(pageSize);
-                if (searchedDocs != null)
+             specialization = context.Specializations
+                         .Where(s => s.specializationID == doctor.specializationID)
+                         .Select(s => s.specializationName)
+                         .FirstOrDefault(),
+             doctorAppointments = context.Appointments
+                         .Where(a => a.doctorID == doctor.Id)
+                         .Join(
+                             context.TimeSlots,
+                             appointment => appointment.Id,
+                             timeSlot => timeSlot.AppointmentID,
+                             (appointment, timeSlot) => new
+                             {
+                                 day = appointment.day.ToString(),
+                                 timeSlot.Time
+                             })
+                         .ToList(),
+             doctor.fname,
+             doctor.lname,
+             doctor.email,
+             doctor.image,
+             doctor.phoneNumber,
+             gender = doctor.gender.ToString()
+         })
+                 .ToList();
+
+                if (!string.IsNullOrWhiteSpace(search))
                 {
-                    return paginationDoc;
+                    var searchedDocs = from d in doctors
+                                       where d.fname.Contains(search) ||
+                                       d.email.Contains(search) ||
+                                       d.specialization.Contains(search) ||
+                                       d.gender.Contains(search) ||
+                                       d.phoneNumber.Contains(search) ||
+                                       d.doctorAppointments.Select(a => a.day).Contains(search)
+                                       select d;
+
+                    var paginationDoc = searchedDocs.Skip((page - 1) * pageSize).Take(pageSize);
+                    if (searchedDocs != null)
+                    {
+                        return paginationDoc;
+                    }
+                    else
+                        return doctors.Skip((page - 1) * pageSize).Take(pageSize);
+
+
                 }
                 else
                     return doctors.Skip((page - 1) * pageSize).Take(pageSize);
 
 
             }
-            else
-                return doctors.Skip((page - 1) * pageSize).Take(pageSize);
-
-
-        }
 
 
         public async Task<string> Register(PatientDTO patient)
@@ -264,5 +240,40 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 return null;
 
         }
+
+
+        // Private Functions to make code more readable
+        private int CalculateFinalPrice(int doctorPrice, int discountValue, discountType type)
+        {
+            if (type == discountType.percentage)
+            {
+                return doctorPrice - ((int)(doctorPrice * discountValue));
+            }
+            else
+            {
+                return doctorPrice - discountValue;
+            }
+        }
+
+        private bool IsDiscountEligible(int discountID, string patientID, int countOfRequests, string doctorID)
+        {
+            if (discountID != 0)
+            {
+                var discount = context.Discounts.FirstOrDefault(d => d.discountID == discountID);
+
+                if (discount != null && discount.numOfRequests == countOfRequests)
+                {
+                    var doctor = context.Doctors.FirstOrDefault(d => d.Id == doctorID);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool IsTimeSlotBooked(string doctorID, int timeSlotID)
+        {
+            return context.Bookings.Any(b => b.DoctorID == doctorID && b.timeSlotID == timeSlotID && b.BookingStatus == Status.pending);
+        }
+
     }
 }

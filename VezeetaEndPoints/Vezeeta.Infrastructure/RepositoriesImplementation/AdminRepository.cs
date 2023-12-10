@@ -101,7 +101,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                         SpecializationName = specializationName,
                         Count = count.Count()
                     }
-                ).OrderByDescending(result => result.Count) // Order by request count in descending order
+                ).OrderByDescending(result => result.Count) 
                 .Take(5); ;
 
             return result;
@@ -189,6 +189,9 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                return HttpStatusCode.NotFound;
 
         }
+
+        //private function to help generate the password for the doctor 
+        // that is later sent to him by email
         private string generatePassword()
         {
             Random random = new Random();
@@ -307,8 +310,11 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         public async  Task<HttpStatusCode> DeleteDoctor(string doctorID)
         {
+            //check if doctor exists 
+         
             var findDoctor = _context.Doctors.FirstOrDefault(d => d.Id == doctorID);
             var UserDoctor = _context.Users.FirstOrDefault(u => u.Id == doctorID);
+            // check if doctor has booking to avoid deleting a doctor with requests
             var countRequestsForDoctor =_context.Bookings.Where(u=>u.DoctorID == doctorID).Count();
             if (findDoctor != null && UserDoctor != null && countRequestsForDoctor ==0)
             {
@@ -319,7 +325,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 _context.SaveChanges();
                 return HttpStatusCode.OK;
             }
-            else return HttpStatusCode.NotFound;
+            else return HttpStatusCode.Unauthorized;
 
         }
 
