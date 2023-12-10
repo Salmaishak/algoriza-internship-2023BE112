@@ -25,6 +25,29 @@
 ## User Authentication: 
 User authentication and Authorization is done using JWT Token, with roles based on our 3 project entities.
 Role is determined with user login with his given creditionals. He is given the access to only his authorized endpoints.
+```
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy =>
+    {
+        policy.RequireAuthenticatedUser(); 
+        policy.RequireRole("Admin"); 
+    });
+
+    options.AddPolicy("Doctor", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Doctor");
+    });
+
+    options.AddPolicy("Patient", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Patient");
+    });
+});
+ ```
+
 ## Onion Architecture, it consists of four layers:
 <b> <i> --> Main Project : VezeetaEndPoints </b> </i>
 - Core Layer (Vezeeta.Core)
