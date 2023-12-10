@@ -25,54 +25,101 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             _userManager = userManager;
         }
 
+        private int CalculateFinalPrice(int doctorPrice, int discountValue, discountType type)
+        {
+            if (type == discountType.percentage)
+            {
+                return doctorPrice - ((int)(doctorPrice * discountValue));
+            }
+            else
+            {
+                return doctorPrice - discountValue;
+            }
+        }
+
+        private bool IsDiscountEligible(int discountID, string patientID, int countOfRequests, string doctorID)
+        {
+            if (discountID != 0)
+            {
+                var discount = context.Discounts.FirstOrDefault(d => d.discountID == discountID);
+
+                if (discount != null && discount.numOfRequests == countOfRequests)
+                {
+                    var doctor = context.Doctors.FirstOrDefault(d => d.Id == doctorID);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool IsTimeSlotBooked(string doctorID, int timeSlotID)
+        {
+            return context.Bookings.Any(b => b.DoctorID == doctorID && b.timeSlotID == timeSlotID && b.BookingStatus == Status.pending);
+        }
+
         public HttpStatusCode booking(string patientID, int SlotID, int DiscountID = 0)
         {
+            int finalPrice = 0;
+            if (SlotID != 0)
             {
-                if (SlotID != 0)
-                {
-                    // Info  of Booking : doctorID, timeID, patientID 
-                    // Timeslot : slotid, appointmentID, timeSlot 
-                    // Appointment: day, appointmentID, doctorID 
-                    var query = from appointment in context.Appointments
-                                join timeslot in context.TimeSlots
-                                on appointment.Id equals timeslot.AppointmentID
-                                select new
-                                {
-                                    appoint = appointment,
-                                    time = timeslot
-                                };
-                    var result = query.ToList();
+                var query = from appointment in context.Appointments
+                            join timeslot in context.TimeSlots
+                            on appointment.Id equals timeslot.AppointmentID
+                            select new
+                            {
+                                appoint = appointment,
+                                time = timeslot
+                            };
+                var result = query.ToList();
 
-                    var targetedTimeSlot = result.Where(a => a.time.SlotId == SlotID);
+                var targetedTimeSlot = result.Where(a => a.time.SlotId == SlotID);
+                var doctorID = targetedTimeSlot.Select(d => d.appoint.doctorID).FirstOrDefault();
+
+                if (!IsTimeSlotBooked(doctorID, SlotID)) // Check if the timeslot is already booked
+                {
+                    var countOfRequests = context.Bookings.Where(b => b.patientID == patientID).Count();
+                    if (IsDiscountEligible(DiscountID, patientID, countOfRequests, doctorID))
+                    {
+                        var discount = context.Discounts.FirstOrDefault(d => d.discountID == DiscountID);
+                        var doctorPrice = context.Doctors.FirstOrDefault(d => d.Id == doctorID).price;
+
+                        finalPrice = CalculateFinalPrice((int)doctorPrice, discount.valueOfDiscount, discount.discountType);
+                    }
 
                     var booking = new Booking()
                     {
-                        DoctorID = targetedTimeSlot.Select(d => d.appoint.doctorID).FirstOrDefault(),
+                        DoctorID = doctorID,
                         timeSlotID = targetedTimeSlot.Select(t => t.time.SlotId).FirstOrDefault(),
                         patientID = patientID,
-                        BookingStatus = Status.pending
-
+                        BookingStatus = Status.pending,
+                        DiscountId = DiscountID,
+                        finalPrice = finalPrice
                     };
                     context.Bookings.Add(booking);
                     context.SaveChanges();
 
                     return HttpStatusCode.OK;
-
-
                 }
                 else
-                    return HttpStatusCode.BadRequest;
-
-
+                {
+                    // Timeslot is already booked, return conflict status
+                    return HttpStatusCode.Conflict;
+                }
             }
-        } //fix the checking if booked part
+            else
+            {
+                return HttpStatusCode.BadRequest;
+            }
+        }
 
         public HttpStatusCode CancelBooking(string patientID, int BookingID)
         {
+
             if (BookingID != 0)
             {
                 Booking booking = context.Bookings.Where<Booking>(b => b.BookingID == BookingID).FirstOrDefault();
-                if (booking != null)
+                
+                if (booking != null&& booking.patientID==patientID)
                 {
                     booking.BookingStatus = Status.canceled;
                     context.SaveChanges();
@@ -86,13 +133,13 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 return HttpStatusCode.BadRequest;
         }
 
-        public dynamic GetAllBookings(string userId) // has temp values
+        public dynamic GetAllBookings(string userId) 
         {
             var userBookings = from booking in context.Bookings
                                join doctor in context.Doctors on
-                               booking.DoctorID equals doctor.doctorid
+                               booking.DoctorID equals doctor.Id
                                join users in context.Users
-                               on doctor.userId equals users.userId
+                               on doctor.Id equals users.Id
                                join specialization in context.Specializations
                                on doctor.specializationID equals specialization.specializationID
                                join timeslot in context.TimeSlots
@@ -108,8 +155,8 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                                    Day = appointment.day,
                                    Time = timeslot.Time,
                                    Price = doctor.price,
-                                   DiscountCode = 0, // temp untill i change db 
-                                   FinalPrice = 0, // after discount, to saved in booking
+                                   DiscountCode = booking.DoctorID, // temp untill i change db 
+                                   FinalPrice = booking.finalPrice, // after discount, to saved in booking
                                    Status = booking.BookingStatus
                                }; 
 
@@ -121,7 +168,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             var doctors = context.Doctors
      .Select(doctor => new
      {
-         doctor.doctorid,
+         doctor.Id,
          doctor.price,
 
          specialization = context.Specializations
@@ -129,7 +176,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                      .Select(s => s.specializationName)
                      .FirstOrDefault(),
          doctorAppointments = context.Appointments
-                     .Where(a => a.doctorID == doctor.doctorid)
+                     .Where(a => a.doctorID == doctor.Id)
                      .Join(
                          context.TimeSlots,
                          appointment => appointment.Id,
