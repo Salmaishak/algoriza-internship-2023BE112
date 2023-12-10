@@ -16,12 +16,15 @@
 
 
  ## Project Overview:
-#### This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Entity Framework and Onion Architecture.
+#### This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Identity Core,Entity Framework and Onion Architecture.
 #
 ## Project Entities Consists of: 
 - Admin
 - Doctors
 - Patient
+## User Authentication: 
+User authentication and Authorization is done using JWT Token, with roles based on our 3 project entities.
+Role is determined with user login with his given creditionals. He is given the access to only his authorized endpoints.
 ## Onion Architecture, it consists of four layers:
 <b> <i> --> Main Project : VezeetaEndPoints </b> </i>
 - Core Layer (Vezeeta.Core)
