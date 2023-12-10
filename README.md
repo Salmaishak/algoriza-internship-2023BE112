@@ -18,10 +18,10 @@
  ## Project Overview:
 #### This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Identity Core, JWT Authentication and Authorizations,Entity Framework and Onion Architecture.
 #
-## Project Entities Consists of: 
-- Admin
-- Doctors
-- Patient
+## Project Logical Entities Consists of: 
+- Admin (User Class)
+- Doctors (Doctor Class Extension of User Class)
+- Patient (User Class)
 ## User Authentication: 
 User authentication and Authorization is done using <b>JWT Token</b>, with roles based on our 3 project entities.
 Role, for all entities types, is determined with user login with his given creditionals. He is given the access to only his authorized endpoints.
