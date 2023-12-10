@@ -63,6 +63,9 @@ builder.Services.AddAuthorization(options =>
     - Timeslot
   - DTOs
     - AddAppointmentDTO
+    - AddDoctorDTO
+    - DiscountDTO
+    - PatientDTO
   - Repositories
     - IAdminRepository
     - IPatientRepository
