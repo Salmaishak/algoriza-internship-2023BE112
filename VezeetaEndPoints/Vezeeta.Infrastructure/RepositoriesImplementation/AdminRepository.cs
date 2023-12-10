@@ -309,7 +309,8 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
         {
             var findDoctor = _context.Doctors.FirstOrDefault(d => d.Id == doctorID);
             var UserDoctor = _context.Users.FirstOrDefault(u => u.Id == doctorID);
-            if (findDoctor != null && UserDoctor != null)
+            var countRequestsForDoctor =_context.Bookings.Where(u=>u.DoctorID == doctorID).Count();
+            if (findDoctor != null && UserDoctor != null && countRequestsForDoctor ==0)
             {
 
                 _context.Doctors.Remove(findDoctor);
