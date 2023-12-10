@@ -51,9 +51,9 @@ namespace Vezeeta.Presentation.API.Controllers
         }
         [Route("/api/doctors/setting/Update")]
         [HttpPatch]
-        public HttpStatusCode UpdateAppointment (int timeslotID,TimeSpan time, DayOfWeek day, string doctorID)
+        public HttpStatusCode UpdateAppointment (int timeslotID,TimeSpan time,  string doctorID)
         {
-            return doctorService.UpdateAppointment(timeslotID, time, day, doctorID);
+            return doctorService.UpdateAppointment(timeslotID, time, doctorID);
 
         }
 

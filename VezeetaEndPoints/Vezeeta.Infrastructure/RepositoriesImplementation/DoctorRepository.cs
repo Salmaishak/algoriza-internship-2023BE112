@@ -33,38 +33,25 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             else return HttpStatusCode.NotFound;
         }
 
-        public HttpStatusCode Delete(int timeslotID) // not done
+        public HttpStatusCode Delete(int timeslotID) 
         {
-            var bookingCheck = _context.Bookings.Where(d => d.timeslot.SlotId == timeslotID &&
-            d.BookingStatus == Status.pending);
-            //if it exists here it is booked
+            var checkTimeSlot = _context.Bookings.
+                Where(b => b.timeSlotID == timeslotID).FirstOrDefault();
 
-            if (bookingCheck.Any())
+            if (checkTimeSlot != null)
             {
                 return HttpStatusCode.Unauthorized;
             }
             else
-            {   //else it doesn't exist in booking, so we it must be in appointments
-               
-                var timeslot = _context.TimeSlots.Where(a => a.SlotId == timeslotID).FirstOrDefault();
-                if ( timeslot == null)
-                {
-                    // this day doesnt have appointments so i will display error not found, he can use Add to add in this day
-                    return HttpStatusCode.NotFound;
-                }
-                else
-                {
-                    //delete timeslot
-                    _context.Remove(timeslot);
-                    _context.SaveChanges();
-                    return HttpStatusCode.OK;
-                }
-
-
+            {
+              var timeslot= _context.TimeSlots.FirstOrDefault(t => t.SlotId == timeslotID);
+                _context.TimeSlots.Remove(timeslot);
+                _context.SaveChanges();
+                return HttpStatusCode.OK;
             }
         }
 
-        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, string doctorID) // not done
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, string doctorID) // not done
         {
             var bookingCheck = _context.Bookings.Where(d => d.timeslot.SlotId == timeslotID &&
           d.BookingStatus == Status.pending);
@@ -76,9 +63,8 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             }
             else
             {   //else it doesn't exist in booking, so we it must be in appointments
-                var appointment = _context.Appointments.Where(a => a.day == day).FirstOrDefault();
                 var timeslot = _context.TimeSlots.Where(a => a.SlotId == timeslotID).FirstOrDefault();
-                if (appointment == null || timeslot == null)
+                if ( timeslot == null)
                 {
                     // this day doesnt have appointments so i will display error not found, he can use Add to add in this day
                     return HttpStatusCode.NotFound;
@@ -124,7 +110,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                     (joinedTimeSlot, appointment) => new { JoinedTimeSlot = joinedTimeSlot, Appointment = appointment }
                 )
                 .Where(joinedAppointment =>
-                    joinedAppointment.JoinedTimeSlot.JoinedUser.Joined.Doctor.doctorid == doctorId &&
+                    joinedAppointment.JoinedTimeSlot.JoinedUser.Joined.Doctor.Id == doctorId &&
                   joinedAppointment.Appointment.day == searchDate
                   
                 )

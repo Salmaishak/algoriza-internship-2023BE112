@@ -39,9 +39,9 @@ namespace Vezeeta.Services.Services
            return repository.ConfirmCheckUp (bookingID);
         }
 
-        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, string doctorID)
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, string doctorID)
         {
-         return repository.UpdateAppointment (timeslotID, time, day, doctorID); 
+         return repository.UpdateAppointment (timeslotID, time, doctorID); 
         }
 
         public HttpStatusCode Delete(int timeslotID)

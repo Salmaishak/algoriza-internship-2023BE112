@@ -57,7 +57,7 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
             return context.Bookings.Any(b => b.DoctorID == doctorID && b.timeSlotID == timeSlotID && b.BookingStatus == Status.pending);
         }
 
-        public HttpStatusCode booking(string patientID, int SlotID, int DiscountID = 0)
+        public HttpStatusCode booking(string patientID, int SlotID, int DiscountID = 4)
         {
             int finalPrice = 0;
             if (SlotID != 0)
@@ -78,13 +78,16 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                 if (!IsTimeSlotBooked(doctorID, SlotID)) // Check if the timeslot is already booked
                 {
                     var countOfRequests = context.Bookings.Where(b => b.patientID == patientID).Count();
+                    var doctorPrice = context.Doctors.FirstOrDefault(d => d.Id == doctorID).price;
                     if (IsDiscountEligible(DiscountID, patientID, countOfRequests, doctorID))
                     {
                         var discount = context.Discounts.FirstOrDefault(d => d.discountID == DiscountID);
-                        var doctorPrice = context.Doctors.FirstOrDefault(d => d.Id == doctorID).price;
+
 
                         finalPrice = CalculateFinalPrice((int)doctorPrice, discount.valueOfDiscount, discount.discountType);
                     }
+                    else
+                        finalPrice = (int)doctorPrice;
 
                     var booking = new Booking()
                     {
@@ -155,8 +158,8 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                                    Day = appointment.day,
                                    Time = timeslot.Time,
                                    Price = doctor.price,
-                                   DiscountCode = booking.DoctorID, // temp untill i change db 
-                                   FinalPrice = booking.finalPrice, // after discount, to saved in booking
+                                   DiscountCode = booking.DiscountId, 
+                                   FinalPrice = booking.finalPrice,
                                    Status = booking.BookingStatus
                                }; 
 

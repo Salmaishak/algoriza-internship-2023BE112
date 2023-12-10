@@ -17,7 +17,7 @@ namespace Vezeeta.Services.Interfaces
 
         public HttpStatusCode Add(AddAppointmentDTO appointmentInfo);
 
-        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time, DayOfWeek day, string doctorID);
+        public HttpStatusCode UpdateAppointment(int timeslotID, TimeSpan time,  string doctorID);
 
         public HttpStatusCode Delete(int timeslotID);
     }
