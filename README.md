@@ -103,6 +103,9 @@ builder.Services.AddAuthorization(options =>
 #
 ## SQL Server Database Diagram: 
 (created inside SSMS)
+### BackUp Link : https://drive.google.com/file/d/1ZTbIxU76YcRgcG9dETIHj89b9XDpOdeT/view?usp=sharing 
+  (Back up is also in Database BackUp Folder)
+  <br/><br/>
 ![algoriza updated DB](https://github.com/Salmaishak/algoriza-internship-2023BE112/assets/96662980/91cb8a2a-10f6-4ffd-8783-36aaa43d5a27)
 ## Email Service 
 - Service Used : SendGrid API
