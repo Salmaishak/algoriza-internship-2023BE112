@@ -13,6 +13,9 @@ using System.Text;
 using Org.BouncyCastle.Cms;
 using System.Net.Http.Headers;
 using System.Net.Http;
+using SendGrid.Helpers.Mail;
+using System.Numerics;
+using Vezeeta.Core.DTOs;
 
 [Route("api/[controller]")]
 public class UserController : ControllerBase
@@ -34,34 +37,6 @@ public class UserController : ControllerBase
 
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser()
-    {
-        // Create a new user
-        var newUser = new User
-        {
-            UserName = "newuser",
-            Email = "newuser@example.com",
-            // Add other user properties
-        };
-
-        var result = await _userManager.CreateAsync(newUser, "Password123!");
-
-        if (result.Succeeded)
-        {
-            // User created successfully
-            // Add user to a role
-            await _userManager.AddToRoleAsync(newUser, "Doctor");
-
-            // Other operations after user creation
-            return Ok("User created successfully.");
-        }
-        else
-        {
-            // Handle errors in user creation
-            return BadRequest(result.Errors);
-        }
-    }
     [HttpPost("login")]
     public async Task<IActionResult> Login(string username, string password)
     {
@@ -96,28 +71,24 @@ public class UserController : ControllerBase
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken.ToString());
             }
-            // User successfully logged in
             return Ok(new JwtSecurityTokenHandler().WriteToken(jwtToken)) ;
         }
         else
         {
-            // Handle login failures
             return BadRequest("Login failed.");
         }
     }
 
     private async Task<string> GetUserRole(string username)
     {
-        // Retrieve user role from the database using Entity Framework Core or any other ORM
         var user = await _vezeetaContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
         if (user != null)
         {
-            // Assuming the role is stored in a property called Role (replace with your actual property name)
-            return user.type.ToString(); // Replace 'Role' with your actual property name representing the role
+            return user.type.ToString(); 
         }
 
-        return null; // Return null or a default role if the user is not found
+        return null; 
     }
     [HttpGet]
     public async Task<IActionResult> Logout()
@@ -128,5 +99,40 @@ public class UserController : ControllerBase
         return Ok("User logged out.");
     }
 
-    // Other actions using UserManager
+
+    // Used to Seed Admin 
+    //[HttpPost("register")]
+    //public async Task<IActionResult> RegisterUser(AddDoctorDTO doctor)
+    //{
+    //    if (doctor != null)
+    //    {
+    //        User doc = new User()
+    //        {
+    //            UserName = doctor.email,
+    //            Email = doctor.email,
+    //            fname = doctor.fname,
+    //            lname = doctor.lname,
+    //            email = doctor.email,
+    //            dateOfBirth = doctor.dateOfBirth,
+    //            image = doctor.image,
+    //            phoneNumber = doctor.phone,
+    //            gender = doctor.gender,
+    //            password = "AdminVezeeta2023!", // Change the length of the password here
+    //            type = UserType.admin
+    //        };
+    //        var result = await _userManager.CreateAsync(doc, doc.password);
+    //        if (result.Succeeded)
+    //        {
+    //            await _userManager.AddToRoleAsync(doc, "Admin");
+
+    //            return Ok("Admin Added");
+    //        }
+    //        else
+    //            return BadRequest("Failed");
+
+
+    //    }
+    //    else
+    //        return null;
+    //}
 }

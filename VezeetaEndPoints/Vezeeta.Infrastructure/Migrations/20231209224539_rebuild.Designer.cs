@@ -12,8 +12,8 @@ using Vezeeta.Infrastructure.DbContexts;
 namespace Vezeeta.Infrastructure.Migrations
 {
     [DbContext(typeof(VezeetaContext))]
-    [Migration("20231209004302_Rebuild")]
-    partial class Rebuild
+    [Migration("20231209224539_rebuild")]
+    partial class rebuild
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

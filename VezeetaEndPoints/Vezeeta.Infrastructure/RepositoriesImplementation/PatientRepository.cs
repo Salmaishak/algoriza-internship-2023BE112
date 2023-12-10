@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Vezeeta.Core.DTOs;
 using Vezeeta.Core.Models;
 using Vezeeta.Core.Repositories;
 using Vezeeta.Infrastructure.DbContexts;
@@ -14,9 +17,12 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
     public class PatientRepository : IPatientRepository
     {
         private readonly VezeetaContext context;
-        public PatientRepository (VezeetaContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public PatientRepository (VezeetaContext context, UserManager<IdentityUser> userManager)
         {
-            this.context =context ;
+            this.context = context;
+            _userManager = userManager;
         }
 
         public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0)
@@ -170,32 +176,43 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         }
 
-        public HttpStatusCode PatientLogin(string email, string password)
-        {
-            if (email != String.Empty && password != String.Empty)
-            {
-                var patient = context.Users.Where<User>(d => d.email == email && d.password == password).FirstOrDefault();
-                if (patient != null)
-                {
-                    return HttpStatusCode.OK;
-                }
-                else return HttpStatusCode.Unauthorized;
-            }
-            else
-                return HttpStatusCode.Unauthorized;
-        }
 
-        public HttpStatusCode Register(User user)
+        public async Task<string> Register(PatientDTO patient)
         {
-            if (user != null)
+            if (patient != null)
             {
-               user.type=  UserType.patient;
-               context.Users.Add(user);
-               context.SaveChanges();
-                return HttpStatusCode.OK;
+                User user = new User()
+                {
+                    UserName = patient.email,
+                    Email = patient.email,
+                    fname = patient.fname,
+                    lname = patient.lname,
+                    email = patient.email,
+                    dateOfBirth = patient.dateOfBirth,
+                    image = patient.image,
+                    phoneNumber = patient.phoneNumber,
+                    gender = patient.gender,
+                    password =patient.password , 
+                    type = UserType.patient
+                };
+                var result = await _userManager.CreateAsync(user, user.password);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "Patient");
+                    context.Users.Add(user);
+
+
+                    context.SaveChanges();
+                    return user.Id;
+                }
+                else
+                    return "";
+
+
             }
             else
-               return HttpStatusCode.NotFound;
+                return null;
+
         }
     }
 }

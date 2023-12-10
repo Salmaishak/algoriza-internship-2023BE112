@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Vezeeta.Core.DTOs;
 using Vezeeta.Core.Models;
 using Vezeeta.Core.Repositories;
 using Vezeeta.Services.Interfaces;
@@ -39,14 +40,10 @@ namespace Vezeeta.Services.Services
             return patientRepo.GetAllDoctors (page, pageSize, search);
         }
 
-        public HttpStatusCode PatientLogin(string email, string password)
+      
+        public Task<string> Register(PatientDTO patient)
         {
-          return patientRepo.PatientLogin(email, password);
-        }
-
-        public HttpStatusCode Register(User user)
-        {
-         return patientRepo.Register(user);
+         return patientRepo.Register(patient);
         }
     }
 }

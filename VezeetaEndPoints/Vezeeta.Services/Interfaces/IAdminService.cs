@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,12 +19,11 @@ namespace Vezeeta.Services.Interfaces
 
         public dynamic GetAllDoctors(int page, int pageSize, string search);
         public dynamic getDoctorbyId(int doctorId);
-        public int addDoctor(AddDoctorDTO dto);
+        public  Task<string> AddDoctor(AddDoctorDTO doctor);
 
-        public HttpStatusCode EditDoctor(int doctorID, AddDoctorDTO doctor);
+        public HttpStatusCode EditDoctor(string doctorID, AddDoctorDTO doctor);
 
-        public HttpStatusCode DeleteDoctor(int doctorID);
-
+        public  Task<HttpStatusCode> DeleteDoctor(string doctorID);
         public dynamic GetallPatients(int page, int pageSize, string search);
 
         public dynamic getPatientByID(int patientId);

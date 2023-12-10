@@ -17,10 +17,13 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
     public  class AdminRepository : IAdminRepository
     {
         private readonly VezeetaContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AdminRepository(VezeetaContext context)
+
+        public AdminRepository(VezeetaContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
 
@@ -186,27 +189,65 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                return HttpStatusCode.NotFound;
 
         }
-        private const string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-        private string generatePassword ()
-
+        private string generatePassword()
         {
             Random random = new Random();
+            const string letters = "abcdefghijklmnopqrstuvwxyz";
+            const string UpperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string specialChars = "!@";
+            const string numbers = "0123456789";
             StringBuilder password = new StringBuilder();
 
-            for (int i = 0; i < 9; i++)
+            // Generate 6 random letters (mix of lowercase and uppercase)
+            for (int i = 0; i < 6; i++)
             {
-                int index = random.Next(Characters.Length);
-                password.Append(Characters[index]);
+                int letterIndex = random.Next(letters.Length);
+                password.Append(letters[letterIndex]);
+            }
+
+            for (int i = 0; i < 6; i++)
+            {
+                int letterIndex = random.Next(UpperLetters.Length);
+                password.Append(UpperLetters[letterIndex]);
+            }
+
+            // Add a special character
+            int specialCharIndex = random.Next(specialChars.Length);
+            password.Append(specialChars[specialCharIndex]);
+
+            // Add a number
+            int numberIndex = random.Next(numbers.Length);
+            password.Append(numbers[numberIndex]);
+
+            // Generate the rest of the characters (total 12 characters)
+            for (int i = 0; i < 4; i++) // Remaining 4 characters to make it 12 in total
+            {
+                int index = random.Next(letters.Length + specialChars.Length + numbers.Length);
+                if (index < letters.Length)
+                {
+                    password.Append(letters[index]);
+                }
+                else if (index < letters.Length + specialChars.Length)
+                {
+                    password.Append(specialChars[index - letters.Length]);
+                }
+                else
+                {
+                    password.Append(numbers[index - (letters.Length + specialChars.Length)]);
+                }
             }
 
             return password.ToString();
         }
-        public int AddDoctor(AddDoctorDTO doctor)
+
+        public async Task<string> AddDoctor(AddDoctorDTO doctor)
         {
             if (doctor != null)
             {
                 User doc = new User()
                 {
+                    UserName = doctor.email,
+                                     Email = doctor.email,
                     fname = doctor.fname,
                     lname = doctor.lname,
                     email = doctor.email,
@@ -214,28 +255,33 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                     image = doctor.image,
                     phoneNumber = doctor.phone,
                     gender = doctor.gender,
-                    password = generatePassword(), // Change the length of the password here
+                    password = generatePassword(),
+                   
                     type = UserType.doctor
                 };
-                
+                var result = await _userManager.CreateAsync(doc, doc.password);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(doc, "Doctor");
                     _context.Users.Add(doc);
-                    _context.SaveChanges();
 
-                _context.Database.ExecuteSqlRaw($"insert into Doctors values (\"doctor\"+{doc.userId}+\"_id\",{doc.userId},{doctor.price},{doctor.specializationID});");
+                    _context.Database.ExecuteSqlRaw($"insert into Doctors values (\'{doc.Id}\',1,{doctor.price},{doctor.specializationID});");
 
-                _context.SaveChanges();
-                    return doc.userId;
-              
-               
+                    return doc.Id;
+                }
+                else
+                    return "";
+
 
             }
             else
-            return -1;
+                return null;
+
         }
         //needs testing
-        public HttpStatusCode EditDoctor(int doctorID, AddDoctorDTO doctor)
+        public HttpStatusCode EditDoctor(string doctorID, AddDoctorDTO doctor)
         {
-            var findDoctor = _context.Doctors.FirstOrDefault(d => d.doctorid == doctorID);
+            var findDoctor = _context.Doctors.FirstOrDefault(d => d.Id == doctorID);
             if (findDoctor != null)
             {
                 User doc = new User()
@@ -247,7 +293,6 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
                     image = doctor.image,
                     phoneNumber = doctor.phone,
                     gender = doctor.gender,
-                    password = generatePassword(), // Change the length of the password here
                     type = UserType.doctor
                 };
                 _context.Set<User>().Update(doc);
@@ -263,9 +308,21 @@ namespace Vezeeta.Infrastructure.RepositoriesImplementation
 
         }
 
-        public HttpStatusCode DeleteDoctor(int doctorID)
+        public async  Task<HttpStatusCode> DeleteDoctor(string doctorID)
         {
-            throw new NotImplementedException();
+            var findDoctor = _context.Doctors.FirstOrDefault(d => d.Id == doctorID);
+            var UserDoctor = _context.Users.FirstOrDefault(u => u.Id == doctorID);
+            if (findDoctor != null && UserDoctor != null)
+            {
+
+                _context.Doctors.Remove(findDoctor);
+                _context.Users.Remove(UserDoctor);
+                await _userManager.DeleteAsync(UserDoctor);
+                _context.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+            else return HttpStatusCode.NotFound;
+
         }
 
         public dynamic GetallPatients(int page, int pageSize, string search)

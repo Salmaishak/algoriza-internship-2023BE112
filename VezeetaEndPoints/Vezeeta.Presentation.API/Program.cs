@@ -74,7 +74,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Patient", policy =>
     {
         policy.RequireAuthenticatedUser();
-        policy.RequireRole(Patient);
+        policy.RequireRole("Patient");
     });
 });
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -107,5 +107,4 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
-
 app.Run();

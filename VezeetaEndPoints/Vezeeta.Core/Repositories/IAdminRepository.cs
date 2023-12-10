@@ -20,12 +20,11 @@ namespace Vezeeta.Core.Repositories
         public dynamic GetAllDoctors(int page, int pageSize, string search);
         public dynamic GetDoctorById (int id);
 
-        public int AddDoctor(AddDoctorDTO doctor);
+        public Task<string> AddDoctor(AddDoctorDTO doctor);
 
-        public HttpStatusCode EditDoctor(int doctorID, AddDoctorDTO doctor);
+        public HttpStatusCode EditDoctor(string doctorID, AddDoctorDTO doctor);
 
-        public HttpStatusCode DeleteDoctor(int doctorID);
-
+        public  Task<HttpStatusCode> DeleteDoctor(string doctorID);
         public dynamic GetallPatients(int page, int pageSize, string search);
 
         public dynamic getPatientByID(int patientId);

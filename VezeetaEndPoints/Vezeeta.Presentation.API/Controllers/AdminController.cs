@@ -76,50 +76,20 @@ namespace Vezeeta.Presentation.API.Controllers
         }
         [HttpPost]
 
-        public async Task<IdentityResult> AddDoctor(AddDoctorDTO doctor)
+        public  Task<string> AddDoctor(AddDoctorDTO doctor)
         {
-            if (doctor != null)
-            {
-                User doc = new User()
-                {
-                    UserName = doctor.email,
-                    Email = doctor.email,
-                                      fname = doctor.fname,
-                    lname = doctor.lname,
-                    email = doctor.email,
-                    dateOfBirth = doctor.dateOfBirth,
-                    image = doctor.image,
-                    phoneNumber = doctor.phone,
-                    gender = doctor.gender,
-                    password = "Abc@235!", // Change the length of the password here
-                    type = UserType.admin
-                };
-                var result = await _userManager.CreateAsync(doc, doc.password);
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(doc, "Doctor");
-                    _context.Users.Add(doc);
-                    //_context.SaveChanges();
-
-                    //_context.Database.ExecuteSqlRaw($"insert into Doctors values (\"doctor\"+{doc.userId}+\"_id\",{doc.userId},{doctor.price},{doctor.specializationID});");
-
-                    //_context.SaveChanges();
-                    return result;
-                }
-                else
-                    return result;
-
-
-            }
-            else
-                return null;
-
+            return _adminService.AddDoctor(doctor);
         }
         [HttpPatch]
-        public async Task<HttpStatusCode> editDoctor(int doctorID, AddDoctorDTO dto)
+        public async Task<HttpStatusCode> editDoctor(string doctorID, AddDoctorDTO dto)
         {
             return _adminService.EditDoctor(doctorID, dto);
 
+        }
+        [HttpDelete]
+        public async Task<HttpStatusCode> DeleteDoctor(string doctorID)
+        {
+            return await _adminService.DeleteDoctor(doctorID);
         }
 
 

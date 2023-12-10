@@ -13,7 +13,7 @@ namespace Vezeeta.Infrastructure.DbContexts
 {
     public class VezeetaContext : IdentityDbContext<IdentityUser>
     {
-        public VezeetaContext(DbContextOptions<VezeetaContext> options) : base(options)
+        public VezeetaContext(DbContextOptions<VezeetaContext> options ) : base(options)
         {
         }
 
@@ -63,14 +63,13 @@ namespace Vezeeta.Infrastructure.DbContexts
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=VezeetaDatabaseFinal;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=VezeetaDB;Trusted_Connection=True;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             modelBuilder.Entity<User>().ToTable("Users"); // Mapping Users to the Users table
             modelBuilder.Entity<Doctor>().ToTable("Doctors"); // Mapping Doctors to a separate Doctors table
-
             base.OnModelCreating(modelBuilder);
 
         }

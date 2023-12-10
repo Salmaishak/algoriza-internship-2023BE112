@@ -50,10 +50,13 @@ namespace Vezeeta.Services.Services
         {return repository.Top10Doctors();
         }
 
-        public  int addDoctor (AddDoctorDTO dto)
-        {
-           return repository.AddDoctor(dto);
-            
+        public async Task<string> AddDoctor(AddDoctorDTO doctor)
+        {   
+            var ID= await repository.AddDoctor(doctor);
+           var Doc= context.Users.FirstOrDefault(u => u.Id == ID.ToString());
+            EmailService emailService = new EmailService();
+            await emailService.SendEmail(Doc.email, Doc.password, Doc.fname);
+            return ID;
 
         }
         public dynamic Top5Specializations()
@@ -61,44 +64,44 @@ namespace Vezeeta.Services.Services
             return repository.Top5Specializations();
         }
 
-        public HttpStatusCode EditDoctor(int doctorID, AddDoctorDTO doctor)
+        public HttpStatusCode EditDoctor(string doctorID, AddDoctorDTO doctor)
         {
             return repository.EditDoctor(doctorID, doctor);
             }
 
-        public HttpStatusCode DeleteDoctor(int doctorID)
+        public async Task<HttpStatusCode> DeleteDoctor(string doctorID)
         {
-            throw new NotImplementedException();
+            return await repository.DeleteDoctor(doctorID);
         }
 
         public dynamic GetallPatients(int page, int pageSize, string search)
         {
-            throw new NotImplementedException();
+            return repository.GetallPatients(page, pageSize, search);
         }
 
         public dynamic getPatientByID(int patientId)
         {
-            throw new NotImplementedException();
+            return repository.getPatientByID(patientId);
         }
 
         public HttpStatusCode AddDiscount(DiscountDTO discountInfo)
         {
-            throw new NotImplementedException();
+           return repository.AddDiscount(discountInfo);
         }
 
         public HttpStatusCode EditDiscount(int discountID, DiscountDTO discountInfo)
         {
-            throw new NotImplementedException();
+            return repository.EditDiscount(discountID, discountInfo);
         }
 
         public HttpStatusCode DeleteDiscount(int discountID)
         {
-            throw new NotImplementedException();
+            return repository.DeleteDiscount(discountID);
         }
 
         public HttpStatusCode DeactivateDiscount(int discountID)
         {
-            throw new NotImplementedException();
+           return repository.DeactivateDiscount(discountID);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Vezeeta.Core.DTOs;
 using Vezeeta.Core.Models;
 using Vezeeta.Infrastructure.DbContexts;
 using Vezeeta.Services.Interfaces;
@@ -14,47 +15,39 @@ namespace Vezeeta.Presentation.API.Controllers
     {
 
         private readonly IPatientService service;
+
         public PatientController(IPatientService service)
         {
             this.service = service;
         }
-        [Route("api/patient/register/[action]")]
-        [HttpGet]
-        public HttpStatusCode Register(User user)
-        {
-          return service.Register(user);
-        }
-        [Route("api/patient/login/[action]")]
-        [HttpGet]
-        public HttpStatusCode login(string email, string password) {
 
-          return  service.PatientLogin(email, password);
-           
+        [HttpPost]
+        public Task<string> Register(PatientDTO patient)
+        {
+          return service.Register(patient);
         }
-        [Route("api/patient/searchDoctors/booking/[action]")]
+       
+        [Authorize(Roles = "Patient")]
         [HttpPost]
         public HttpStatusCode booking(int patientID, int SlotID, int DiscountID = 0) {
             
             return service.booking(patientID, SlotID, DiscountID);
           
         }
-
-        [Route("api/patient/booking/[action]")]
+        [Authorize(Roles = "Patient")]
         [HttpPatch]
         public HttpStatusCode CancelBooking(int patientID, int BookingID)
         {
             return service.CancelBooking(patientID, BookingID);
         }
-
-        [Route("api/patient/booking/[action]")]
+        [Authorize(Roles = "Patient")]
         [HttpGet]
 
         public dynamic GetAll(int userId)
         {
             return service.GetAllBookings(userId);
         }
-
-        [Route("api/patient/searchDoctors/Getall")]
+        [Authorize(Roles = "Patient")]
         [HttpGet]
 
         public dynamic GetAllDoctors(int page=1, int pageSize=10, string search="") {
