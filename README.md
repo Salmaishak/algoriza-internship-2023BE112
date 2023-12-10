@@ -16,7 +16,7 @@
 
 
  ## Project Overview:
-#### This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Identity Core,Entity Framework and Onion Architecture.
+#### This project aims to provide hands-on practice on ASP.NET Core, SQL Server, ASP.NET Core APIs, Identity Core, JWT Authentication and Authorizations,Entity Framework and Onion Architecture.
 #
 ## Project Entities Consists of: 
 - Admin
